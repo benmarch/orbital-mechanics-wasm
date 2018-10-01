@@ -1,0 +1,88 @@
+<template id="ClassicalElementsGeneratorTemplate">
+    <form id="stateVectorForm" name="stateVectors">
+        <div id="radius">
+            R:
+            <input type="number" name="position_i" value="0">I +
+            <input type="number" name="position_j" value="0">J +
+            <input type="number" name="position_k" value="0">K
+        </div>
+        <div id="velocity">
+            V:
+            <input type="number" name="velocity_i" value="0">I +
+            <input type="number" name="velocity_j" value="0">J +
+            <input type="number" name="velocity_k" value="0">K
+        </div>
+    </form>
+    <br>
+
+    <div id="elements"></div>
+</template>
+
+<script>
+    const classicalElementsGeneratorDoc = document.currentScript.ownerDocument;
+
+    /*
+     position: [8228, 389, 6888],
+     velocity: [-0.7, 6.6, -0.6]
+     */
+
+    class ClassicalElementsGenerator extends HTMLElement {
+        orbit = new Module.Orbit();
+        elementsElem;
+
+        stateVectors = {
+            position: [0, 0, 0],
+            velocity: [0, 0, 0]
+        };
+
+        constructor() {
+            super();
+
+            this.handleInput = this.handleInput.bind(this);
+            this.regenerate = this.regenerate.bind(this);
+        }
+
+        connectedCallback() {
+            const shadowRoot = this.attachShadow({mode:'open'});
+
+            // Adds a template clone into shadow root.
+            shadowRoot.appendChild(document.importNode(classicalElementsGeneratorDoc.getElementById('ClassicalElementsGeneratorTemplate').content, true));
+            this.elementsElem = shadowRoot.getElementById('elements');
+
+            this.regenerate();
+
+            shadowRoot.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', this.handleInput);
+            });
+        }
+
+        handleInput(event) {
+            const dimensionMap = {
+                i: 0,
+                j: 1,
+                k: 2
+            };
+            const { name, value } = event.target;
+            const [state, dimension] = name.split('_');
+
+            this.stateVectors[state][dimensionMap[dimension]] = Number(value);
+
+            this.regenerate();
+        }
+
+        regenerate() {
+            var elements = this.orbit.generateClassicalElements(this.stateVectors);
+
+            this.elementsElem.innerHTML = `
+                Semimajor Axis (a): ${fixRoundingError(elements.a) || 0} km <br>
+                Eccentricity (e): ${fixRoundingError(elements.e) || 0} <br>
+                Inclination (i): ${fixRoundingError(elements.i * 180/Math.PI) || 0} degrees <br>
+                Right Ascension (Ω): ${fixRoundingError(elements.Om * 180/Math.PI) || 0} degrees <br>
+                Argument of Perigee (o): ${fixRoundingError(elements.o * 180/Math.PI) || 0} degrees <br>
+                True Anomaly (nu): ${fixRoundingError(elements.nu * 180/Math.PI) || 0} degrees <br>
+            `;
+        }
+    }
+
+    window.customElements.define('classical-elements-generator', ClassicalElementsGenerator);
+</script>

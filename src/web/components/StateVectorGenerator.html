@@ -1,0 +1,98 @@
+<template id="StateVectorGeneratorTemplate">
+    <div id="radius"></div>
+    <div id="velocity"></div>
+    <br>
+
+    <form id="elementsForm" name="elements">
+        <label>
+            <span>Semimajor Axis (a):</span>
+            <adjustable-input name="a" type="range" min="1" max="100000" value="6378"></adjustable-input>
+        </label>
+        <label>
+            <span>Eccentricity (e):</span>
+            <adjustable-input name="e" type="range" min="0" max="0.99" step="0.01"></adjustable-input>
+        </label>
+        <label>
+            <span>Inclination (i):</span>
+            <adjustable-input name="i" type="range" min="0" max="180"></adjustable-input>
+        </label>
+        <label>
+            <span>Right Ascension of the Ascending Node (Ω):</span>
+            <adjustable-input name="Om" type="range" min="0" max="360"></adjustable-input>
+        </label>
+        <label>
+            <span>Argument of Perigee (o):</span>
+            <adjustable-input name="o" type="range" min="0" max="360"></adjustable-input>
+        </label>
+        <label>
+            <span>True Anomaly (nu):</span>
+            <adjustable-input name="nu" type="range" min="0" max="360"></adjustable-input>
+        </label>
+    </form>
+</template>
+
+<script>
+    const stateVectorGeneratorDoc = document.currentScript.ownerDocument;
+
+    class StateVectorGenerator extends HTMLElement {
+        angleElements = ['i', 'o', 'Om', 'nu'];
+
+        orbit = new Module.Orbit();
+        radiusElem;
+        velocityElem;
+
+        elements = {
+            a: 6378,
+            e: 0,
+            i: 0,
+            o: 0,
+            Om: 0,
+            nu: 0,
+            eps: 0,
+            n: 0,
+            h: 0,
+            h_vec: [0,0,0],
+            e_vec: [0,0,0],
+            n_vec: [0,0,0],
+        };
+
+        constructor() {
+            super();
+
+            this.handleInput = this.handleInput.bind(this);
+            this.regenerate = this.regenerate.bind(this);
+        }
+
+        connectedCallback() {
+            const shadowRoot = this.attachShadow({mode:'open'});
+
+            // Adds a template clone into shadow root.
+            shadowRoot.appendChild(document.importNode(stateVectorGeneratorDoc.getElementById('StateVectorGeneratorTemplate').content, true));
+            this.radiusElem = shadowRoot.getElementById('radius');
+            this.velocityElem = shadowRoot.getElementById('velocity');
+
+            this.regenerate();
+
+            shadowRoot.querySelectorAll('adjustable-input').forEach(input => {
+                input.addEventListener('input', this.handleInput);
+            });
+        }
+
+        handleInput(event) {
+            const { name, value } = event.target;
+
+            this.elements[name] = this.angleElements.includes(name) ? Number(value) * Math.PI/180 : Number(value);
+
+            this.regenerate();
+        }
+
+        regenerate() {
+            var stateVectors = this.orbit.generateStateVectors(this.elements);
+
+            this.radiusElem.innerHTML = printVector('R', stateVectors.position);
+            this.velocityElem.innerHTML = printVector('V', stateVectors.velocity);
+        }
+    }
+
+    window.customElements.define('state-vector-generator', StateVectorGenerator);
+</script>

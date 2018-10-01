@@ -1,0 +1,58 @@
+<template id="AdjustableInputTemplate">
+    <div data-component="AdjustableInput" class="adjustable-input">
+        <input type="range" class="adjustable-input__range">
+        <input type="number" class="adjustable-input__number">
+    </div>
+</template>
+
+<script>
+    const adjustableImportDoc = document.currentScript.ownerDocument;
+
+    class AdjustableInput extends HTMLElement {
+        min = 0;
+        max = 100;
+        step = 1;
+        value = 0;
+
+        name;
+        rangeInput;
+        numberInput;
+
+        connectedCallback() {
+            const shadowRoot = this.attachShadow({mode:'open'});
+
+            // Adds a template clone into shadow root.
+            shadowRoot.appendChild(document.importNode(adjustableImportDoc.getElementById('AdjustableInputTemplate').content, true));
+            this.rangeInput = shadowRoot.querySelector('.adjustable-input__range');
+            this.numberInput = shadowRoot.querySelector('.adjustable-input__number')
+
+            // get properties
+            this.max = this.rangeInput.max = this.getAttribute('max') || this.max;
+            this.min = this.rangeInput.min = this.getAttribute('min') || this.min;
+            this.step = this.rangeInput.step = this.getAttribute('step') || this.step;
+            this.value = this.getAttribute('value') || this.value;
+            this.name = this.getAttribute('name') || '';
+
+            this.registerListeners();
+            this.updateValue(this.value);
+        }
+
+        registerListeners() {
+            const handleUpdate = (event) => {
+                this.updateValue(event.target.value);
+            }
+            this.rangeInput.addEventListener('input', handleUpdate);
+            this.numberInput.addEventListener('input', handleUpdate)
+        }
+
+        updateValue(value) {
+            this.rangeInput.value = value;
+            this.numberInput.value = value;
+            this.value = value;
+
+            this.dispatchEvent(new Event('input'))
+        }
+    }
+
+    window.customElements.define('adjustable-input', AdjustableInput);
+</script>
