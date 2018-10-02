@@ -12,7 +12,7 @@ using namespace std;
  */
 void ClassicalElementsGenerator::calculateTotalMechanicalEnergy()
 {
-    m_elements.eps = pow(m_V, 2)/2 - MU/m_R;
+    m_elements.eps = pow(m_velocity.getMagnitude(), 2)/2 - MU/m_radius.getMagnitude();
 }
 
 /**
@@ -25,41 +25,38 @@ void ClassicalElementsGenerator::calculateSemimajorAxis()
 
 void ClassicalElementsGenerator::calculateEccentricityVector()
 {
-    Vector scaledPosition = scale(m_R_vec, (1/MU) * (pow(m_V, 2) - MU/m_R));
-    Vector scaledVelocity = scale(m_V_vec, (1/MU) * dot(m_R_vec, m_V_vec));
+    Vector scaledPosition = m_radius * ((1 / MU) * (pow(m_velocity.getMagnitude(), 2) - MU / m_radius.getMagnitude()));
+    Vector scaledVelocity = m_velocity * ((1 / MU) * m_radius.dot(m_velocity));
 
-    m_elements.e_vec = subtract(scaledPosition, scaledVelocity);
-    m_elements.e = magnitude(m_elements.e_vec);
+    m_elements.e = scaledPosition - scaledVelocity;
 }
 
 void ClassicalElementsGenerator::calculateAngularMomentum()
 {
-    m_elements.h_vec = cross(m_R_vec, m_V_vec);
-    m_elements.h = magnitude(m_elements.h_vec);
+    m_elements.h = m_radius.cross(m_velocity);
 }
 
 void ClassicalElementsGenerator::calculateInclination()
 {
-    m_elements.i = acos(m_elements.h_vec.c/m_elements.h);
+    m_elements.i = acos(m_elements.h.getZ()/m_elements.h.getMagnitude());
 }
 
 void ClassicalElementsGenerator::calculateNodalVector()
 {
     Vector k_hat = Vector{0, 0, 1};
-    m_elements.n_vec = cross(k_hat, m_elements.h_vec);
-    m_elements.n = magnitude(m_elements.n_vec);
+    m_elements.n = k_hat.cross(m_elements.h);
 }
 
 void ClassicalElementsGenerator::calculateRightAscensionOfTheAscendingNode()
 {
-    double rightAscension = acos(m_elements.n_vec.a/m_elements.n);
+    double rightAscension = acos(m_elements.n.getX()/m_elements.n.getMagnitude());
 
     // quadrant check
-    if (m_elements.n_vec.b > 0) {
+    if (m_elements.n.getY() > 0) {
         m_elements.Om = rightAscension;
-    } else if (m_elements.n_vec.b < 0) {
+    } else if (m_elements.n.getY() < 0) {
         m_elements.Om = 2*M_PI - rightAscension;
-    } else if (m_elements.n_vec.a > 0) {
+    } else if (m_elements.n.getX() > 0) {
         m_elements.Om = 0;
     } else {
         m_elements.Om = M_PI;
@@ -68,12 +65,12 @@ void ClassicalElementsGenerator::calculateRightAscensionOfTheAscendingNode()
 
 void ClassicalElementsGenerator::calculateArgumentOfPerigee()
 {
-    double argumentOfPerigee = acos(dot(m_elements.n_vec, m_elements.e_vec) / m_elements.n / m_elements.e);
+    double argumentOfPerigee = acos(m_elements.n.dot(m_elements.e) / m_elements.n.getMagnitude() / m_elements.e.getMagnitude());
 
     // quadrant check
-    if (m_elements.e_vec.c > 0) {
+    if (m_elements.e.getZ() > 0) {
         m_elements.o = argumentOfPerigee;
-    } else if (m_elements.e_vec.c < 0) {
+    } else if (m_elements.e.getZ() < 0) {
         m_elements.o = 2*M_PI - argumentOfPerigee;
     } else {
         m_elements.o = argumentOfPerigee; // no?
@@ -82,16 +79,16 @@ void ClassicalElementsGenerator::calculateArgumentOfPerigee()
 
 void ClassicalElementsGenerator::calculateTrueAnomaly()
 {
-    double trueAnomaly = acos(dot(m_R_vec, m_elements.e_vec) / m_R / m_elements.e);
+    double trueAnomaly = acos(m_radius.dot(m_elements.e) / m_radius.getMagnitude() / m_elements.e.getMagnitude());
 
-    double r_dot_v = dot(m_R_vec, m_V_vec);
+    double r_dot_v = m_radius.dot(m_velocity);
 
     // quadrant check
     if (r_dot_v > 0) {
         m_elements.nu = trueAnomaly;
     } else if (r_dot_v < 0) {
         m_elements.nu =  2*M_PI - trueAnomaly;
-    } else if (m_elements.a * (1 - m_elements.e)) {
+    } else if (m_elements.a * (1 - m_elements.e.getMagnitude())) {
         m_elements.nu = 0;
     } else {
         m_elements.nu = M_PI;
@@ -100,10 +97,8 @@ void ClassicalElementsGenerator::calculateTrueAnomaly()
 
 ClassicalElements ClassicalElementsGenerator::generateFromStateVectors(Vector &position, Vector &velocity)
 {
-    m_R_vec = position;
-    m_V_vec = velocity;
-    m_R = magnitude(position);
-    m_V = magnitude(velocity);
+    m_radius = position;
+    m_velocity = velocity;
 
     calculateTotalMechanicalEnergy();
     calculateSemimajorAxis();
@@ -122,13 +117,8 @@ ClassicalElements ClassicalElementsGenerator::generateFromStateVectors(Vector &p
 EMSCRIPTEN_BINDINGS(elements_bindings) {
         emscripten::value_object<ClassicalElements>("ClassicalElements")
                 .field("a", &ClassicalElements::a)
-                .field("eps", &ClassicalElements::eps)
-                .field("e_vec", &ClassicalElements::e_vec)
                 .field("e", &ClassicalElements::e)
-                .field("h_vec", &ClassicalElements::h_vec)
-                .field("h", &ClassicalElements::h)
                 .field("i", &ClassicalElements::i)
-                .field("n_vec", &ClassicalElements::n_vec)
                 .field("o", &ClassicalElements::o)
                 .field("Om", &ClassicalElements::Om)
                 .field("nu", &ClassicalElements::nu)

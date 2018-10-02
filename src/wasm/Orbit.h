@@ -5,7 +5,8 @@
 #include "ClassicalElementsGenerator.h"
 #include "StateVectorGenerator.h"
 
-class Orbit {
+class Orbit
+{
 public:
     Orbit();
     ~Orbit();
@@ -14,8 +15,8 @@ public:
     StateVectors generateStateVectors(ClassicalElements elements);
 
 private:
-    ClassicalElementsGenerator *m_elements_generator;
-    StateVectorGenerator *m_state_vector_generator;
+    ClassicalElementsGenerator *m_classicalElementsGenerator;
+    StateVectorGenerator *m_stateVectorGenerator;
 };
 
 

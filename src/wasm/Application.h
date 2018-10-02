@@ -4,7 +4,8 @@
 #include <iostream>
 #include "Orbit.h"
 
-class Application {
+class Application
+{
 public:
     Orbit createOrbit(StateVectors stateVectors);
     Orbit createOrbit(ClassicalElements elements);

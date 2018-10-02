@@ -9,3 +9,7 @@ function fixRoundingError(num) {
 function printVector(name, vec) {
     return `${name}: ${fixRoundingError(vec[0])}I + ${fixRoundingError(vec[1])}J + ${fixRoundingError(vec[2])}K`;
 }
+
+function magnitude(vec) {
+    return Math.sqrt(Math.pow(vec[0], 2) + Math.pow(vec[1], 2) + Math.pow(vec[2], 2));
+}

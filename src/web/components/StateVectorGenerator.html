@@ -43,17 +43,11 @@
 
         elements = {
             a: 6378,
-            e: 0,
+            e: [0, 0, 0],
             i: 0,
             o: 0,
             Om: 0,
             nu: 0,
-            eps: 0,
-            n: 0,
-            h: 0,
-            h_vec: [0,0,0],
-            e_vec: [0,0,0],
-            n_vec: [0,0,0],
         };
 
         constructor() {
@@ -81,7 +75,11 @@
         handleInput(event) {
             const { name, value } = event.target;
 
-            this.elements[name] = this.angleElements.includes(name) ? Number(value) * Math.PI/180 : Number(value);
+            if (name === 'e') {
+                this.elements.e = [Number(value), 0, 0]; // we only need the magnitude, but this should be fixed
+            } else {
+                this.elements[name] = this.angleElements.includes(name) ? Number(value) * Math.PI/180 : Number(value);
+            }
 
             this.regenerate();
         }

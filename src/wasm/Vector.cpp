@@ -3,70 +3,96 @@
 
 #include "Vector.h"
 
-Vector copy(Vector &vec)
+// default constructor
+Vector::Vector(double x, double y, double z):
+    m_x{x}, m_y{y}, m_z{z}
 {
-    Vector copy;
-
-    copy.a = vec.a;
-    copy.b = vec.b;
-    copy.c = vec.c;
-
-    return copy;
+    setMagnitude();
 }
 
-double magnitude(Vector &vec)
+// copy constructor
+Vector::Vector(const Vector &vec):
+    Vector{vec.getX(), vec.getY(), vec.getZ()}
 {
-    return sqrt(pow(vec.a, 2) + pow(vec.b, 2) + pow(vec.c, 2));
+
 }
 
-Vector scale(Vector &vec, double scale)
+double Vector::getX() const
 {
-    Vector newVector;
-
-    newVector.a = vec.a * scale;
-    newVector.b = vec.b * scale;
-    newVector.c = vec.c * scale;
-
-    return newVector;
+    return m_x;
 }
 
-Vector add(Vector &vec1, Vector &vec2)
+double Vector::getY() const
 {
-    Vector newVector;
-
-    newVector.a = vec1.a + vec2.a;
-    newVector.b = vec1.b + vec2.b;
-    newVector.c = vec1.c + vec2.c;
-
-    return newVector;
+    return m_y;
 }
 
-Vector subtract(Vector &vec1, Vector &vec2)
+double Vector::getZ() const
 {
-    Vector inverseVector2 = scale(vec2, -1);
-
-    return add(vec1, inverseVector2);
+    return m_z;
 }
 
-double dot(Vector &vec1, Vector &vec2)
+void Vector::setX(double x)
 {
-    return vec1.a * vec2.a + vec1.b * vec2.b + vec1.c * vec2.c;
+    m_x = x;
+    setMagnitude();
 }
 
-Vector cross(Vector &vec1, Vector &vec2)
+void Vector::setY(double y)
 {
-    Vector product;
+    m_y = y;
+    setMagnitude();
+}
 
-    product.a = (vec1.b * vec2.c) - (vec1.c * vec2.b);
-    product.b = (vec1.c * vec2.a) - (vec1.a * vec2.c);
-    product.c = (vec1.a * vec2.b) - (vec1.b * vec2.a);
+void Vector::setZ(double z)
+{
+    m_z = z;
+    setMagnitude();
+}
 
-    return product;
+double Vector::getMagnitude() const
+{
+    return mag;
+}
+
+void Vector::setMagnitude()
+{
+    mag = sqrt(pow(getX(), 2) + pow(getY(), 2) + pow(getZ(), 2));
+}
+
+Vector Vector::operator*(double scale)
+{
+    return Vector{getX() * scale, getY() * scale, getZ() * scale};
+}
+
+Vector Vector::operator+(const Vector &vec2)
+{
+    return Vector{getX() + vec2.getX(), getY() + vec2.getY(), getZ() + vec2.getZ()};
+}
+
+Vector Vector::operator-(const Vector &vec2)
+{
+    return Vector{getX() - vec2.getX(), getY() - vec2.getY(), getZ() - vec2.getZ()};
+}
+
+double Vector::dot(const Vector &vec2)
+{
+    return getX() * vec2.getX() + getY() * vec2.getY() + getZ() * vec2.getZ();
+}
+
+Vector Vector::cross(const Vector &vec2)
+{
+    return Vector{
+        (getY() * vec2.getZ()) - (getZ() * vec2.getY()),
+        (getZ() * vec2.getX()) - (getX() * vec2.getZ()),
+        (getX() * vec2.getY()) - (getY() * vec2.getX())
+    };
 }
 
 EMSCRIPTEN_BINDINGS(vector_bindings) {
         emscripten::value_array<Vector>("Vector")
-                .element(&Vector::a)
-                .element(&Vector::b)
-                .element(&Vector::c);
+                .element(&Vector::getX, &Vector::setX)
+                .element(&Vector::getY, &Vector::setY)
+                .element(&Vector::getZ, &Vector::setZ)
+                ;
 };

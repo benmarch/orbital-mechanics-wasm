@@ -75,7 +75,7 @@
 
             this.elementsElem.innerHTML = `
                 Semimajor Axis (a): ${fixRoundingError(elements.a) || 0} km <br>
-                Eccentricity (e): ${fixRoundingError(elements.e) || 0} <br>
+                Eccentricity (e): ${fixRoundingError(magnitude(elements.e)) || 0} <br>
                 Inclination (i): ${fixRoundingError(elements.i * 180/Math.PI) || 0} degrees <br>
                 Right Ascension (Ω): ${fixRoundingError(elements.Om * 180/Math.PI) || 0} degrees <br>
                 Argument of Perigee (o): ${fixRoundingError(elements.o * 180/Math.PI) || 0} degrees <br>

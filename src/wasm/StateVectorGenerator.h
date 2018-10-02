@@ -15,7 +15,8 @@ typedef struct {
     Vector row3;
 } RotationMatrix;
 
-class StateVectorGenerator {
+class StateVectorGenerator
+{
 public:
     StateVectors generateFromClassicalElements(ClassicalElements elements);
 

@@ -1,24 +1,35 @@
 #ifndef ORBITAL_MECHANICS_VECTOR_H
 #define ORBITAL_MECHANICS_VECTOR_H
 
-typedef struct {
-    double a;
-    double b;
-    double c;
-} Vector;
+class Vector
+{
+public:
+    Vector(double x=0, double y=0, double z=0);
+    Vector(const Vector &vec);
 
-Vector copy(Vector &vec);
+    double dot(const Vector &vec2);
+    Vector cross(const Vector &vec2);
 
-double magnitude(Vector &vec);
+    Vector operator*(double scale);
+    Vector operator+(const Vector &vec2);
+    Vector operator-(const Vector &vec2);
 
-Vector scale(Vector &vec, double scale);
+    double getX() const;
+    double getY() const;
+    double getZ() const;
+    double getMagnitude() const;
 
-Vector add(Vector &vec1, Vector &vec2);
+    void setX(double x);
+    void setY(double y);
+    void setZ(double z);
 
-Vector subtract(Vector &vec1, Vector &vec2);
+private:
+    void setMagnitude();
 
-double dot(Vector &vec1, Vector &vec2);
-
-Vector cross(Vector &vec1, Vector &vec2);
+    double m_x;
+    double m_y;
+    double m_z;
+    double mag;
+};
 
 #endif //ORBITAL_MECHANICS_VECTOR_H
