@@ -10,19 +10,42 @@
     <link rel="import" href="components/StateVectorGenerator.html">
     <link rel="import" href="components/ClassicalElementsGenerator.html">
 
+    <style>
+        .wide-column {
+            width: 40%;
+            float: left;
+        }
+        .narrow-column {
+            width: 20%;
+            float: left;
+        }
+    </style>
+
     <script>
         // initialize app
         Module.onRuntimeInitialized = function() {
             document.getElementById('app').innerHTML = `
-                <state-vector-generator></state-vector-generator>
-                <br><br>
-                <classical-elements-generator></classical-elements-generator>
+                <div class="wide-column">
+                    <state-vector-generator></state-vector-generator>
+                </div>
+                <div class="narrow-column">
+                    <button onclick="transferStateVectors()">Copy State Vectors --></button>
+                </div>
+                <div class="wide-column">
+                    <classical-elements-generator></classical-elements-generator>
+                </div>
             `;
+
+            const elementsGenerator = document.querySelector('classical-elements-generator');
+            document.querySelector('state-vector-generator').addEventListener('input', event => {
+                elementsGenerator.updateWithStateVectors(event.target.value);
+            });
         }
-    </script>
 
-    <script>
-
+        function transferStateVectors() {
+            const stateVectors = document.querySelector('state-vector-generator').getStateVectors();
+            document.querySelector('classical-elements-generator').updateWithStateVectors(stateVectors);
+        }
     </script>
 </head>
 <body>

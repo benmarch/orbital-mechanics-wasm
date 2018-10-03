@@ -48,6 +48,9 @@
             o: 0,
             Om: 0,
             nu: 0,
+            u: 0,
+            Pi: 0,
+            l: 0
         };
 
         constructor() {
@@ -81,14 +84,32 @@
                 this.elements[name] = this.angleElements.includes(name) ? Number(value) * Math.PI/180 : Number(value);
             }
 
+            Object.values(this.elements).forEach(element => {
+                let value;
+                if (typeof element === 'number') {
+                    value = element;
+                } else if (typeof element === 'array') {
+                    value = element[0];
+                }
+
+                setPrecision(Math.min(String(value).replace(/[\.\-]/g, '').length, precision));
+            })
+
             this.regenerate();
+            this.dispatchEvent(new Event('input'));
+        }
+
+        getStateVectors() {
+            return this.orbit.generateStateVectors(this.elements);
         }
 
         regenerate() {
-            var stateVectors = this.orbit.generateStateVectors(this.elements);
+            var stateVectors = this.getStateVectors();
 
             this.radiusElem.innerHTML = printVector('R', stateVectors.position);
             this.velocityElem.innerHTML = printVector('V', stateVectors.velocity);
+
+            this.value = stateVectors;
         }
     }
 

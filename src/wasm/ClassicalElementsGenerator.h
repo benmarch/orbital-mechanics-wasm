@@ -13,6 +13,9 @@ typedef struct {
     double o; // argument of perigee
     double Om; // right ascension of the ascending node
     double nu; // true anomaly
+    double u; // argument of latitude
+    double Pi; // longitude of perigee
+    double l; // true longitude
 } ClassicalElements;
 
 class ClassicalElementsGenerator
@@ -34,6 +37,9 @@ private:
     void calculateRightAscensionOfTheAscendingNode();
     void calculateArgumentOfPerigee();
     void calculateTrueAnomaly();
+    void calculateArgumentOfLatitude();
+    void calculateLongitudeOfPerigee();
+    void calculateTrueLongitude();
 };
 
 

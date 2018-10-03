@@ -1,4 +1,12 @@
 <template id="ClassicalElementsGeneratorTemplate">
+    <style>
+        dt, dd {
+            float: left;
+            width: 50%;
+            margin: 0;
+        }
+    </style>
+
     <form id="stateVectorForm" name="stateVectors">
         <div id="radius">
             R:
@@ -29,10 +37,17 @@
     class ClassicalElementsGenerator extends HTMLElement {
         orbit = new Module.Orbit();
         elementsElem;
+        fields = [];
 
         stateVectors = {
             position: [0, 0, 0],
             velocity: [0, 0, 0]
+        };
+
+        dimensionMap = {
+            i: 0,
+            j: 1,
+            k: 2
         };
 
         constructor() {
@@ -53,33 +68,80 @@
 
             shadowRoot.querySelectorAll('input').forEach(input => {
                 input.addEventListener('input', this.handleInput);
+                this.fields.push(input);
             });
         }
 
         handleInput(event) {
-            const dimensionMap = {
-                i: 0,
-                j: 1,
-                k: 2
-            };
             const { name, value } = event.target;
             const [state, dimension] = name.split('_');
 
-            this.stateVectors[state][dimensionMap[dimension]] = Number(value);
+            this.stateVectors[state][this.dimensionMap[dimension]] = Number(value);
 
             this.regenerate();
         }
 
+        populateFields() {
+            this.fields.forEach(input => {
+                const [state, dimension] = input.name.split('_');
+
+                input.value = this.stateVectors[state][this.dimensionMap[dimension]];
+            })
+        }
+
+        updateWithStateVectors(stateVectors) {
+            this.stateVectors = stateVectors;
+
+            this.populateFields();
+            this.regenerate();
+        }
+
+        getDisplayValues(elements) {
+            return {
+                a: (fixRoundingError(elements.a) || 0) + ' km',
+                e: fixRoundingError(magnitude(elements.e)) || 0,
+                i: (fixRoundingError(elements.i * 180/Math.PI) || 0) + ' degrees',
+                Om: fixRoundingError(elements.i) === 0 ? 'N/A' : (fixRoundingError(elements.Om * 180/Math.PI) || 0) + ' degrees',
+                o: fixRoundingError(magnitude(elements.e)) === 0 ? 'N/A' : (fixRoundingError(elements.o * 180/Math.PI) || 0) + ' degrees',
+                nu: fixRoundingError(magnitude(elements.e)) === 0 ? 'N/A' : (fixRoundingError(elements.nu * 180/Math.PI) || 0) + ' degrees',
+                u: fixRoundingError(elements.i) === 0 ? 'N/A' : (fixRoundingError(elements.u * 180/Math.PI) || 0) + ' degrees',
+                Pi: (magnitude(elements.e)) === 0 ? 'N/A' : (fixRoundingError(elements.Pi * 180/Math.PI) || 0) + ' degrees',
+                l: (fixRoundingError(elements.l * 180/Math.PI) || 0) + ' degrees'
+            };
+        }
+
         regenerate() {
-            var elements = this.orbit.generateClassicalElements(this.stateVectors);
+            var elements = this.getDisplayValues(this.orbit.generateClassicalElements(this.stateVectors));
 
             this.elementsElem.innerHTML = `
-                Semimajor Axis (a): ${fixRoundingError(elements.a) || 0} km <br>
-                Eccentricity (e): ${fixRoundingError(magnitude(elements.e)) || 0} <br>
-                Inclination (i): ${fixRoundingError(elements.i * 180/Math.PI) || 0} degrees <br>
-                Right Ascension (Ω): ${fixRoundingError(elements.Om * 180/Math.PI) || 0} degrees <br>
-                Argument of Perigee (o): ${fixRoundingError(elements.o * 180/Math.PI) || 0} degrees <br>
-                True Anomaly (nu): ${fixRoundingError(elements.nu * 180/Math.PI) || 0} degrees <br>
+                <dl>
+                    <dt>Semimajor Axis (a):</dt>
+                    <dd>${elements.a}</dd>
+
+                    <dt>Eccentricity (e):</dt>
+                    <dd>${elements.e}</dd>
+
+                    <dt>Inclination (i):</dt>
+                    <dd>${elements.i}</dd>
+
+                    <dt>Right Ascension (Ω):</dt>
+                    <dd>${elements.Om}</dd>
+
+                    <dt>Argument of Perigee (o):</dt>
+                    <dd>${elements.o}</dd>
+
+                    <dt>True Anomaly (nu):</dt>
+                    <dd>${elements.nu}</dd>
+
+                    <dt>Argument of Latitude (u):</dt>
+                    <dd>${elements.u}</dd>
+
+                    <dt>Longitude of Perigee (∏):</dt>
+                    <dd>${elements.Pi}</dd>
+
+                    <dt>True Longitude (l):</dt>
+                    <dd>${elements.l}</dd>
+                </dl>
             `;
         }
     }

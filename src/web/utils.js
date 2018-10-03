@@ -1,6 +1,10 @@
 // trims off errors due to floating point arithmetic
-const precision = 8;
-const epsilon = Math.pow(10, precision * -1);
+let precision = 8;
+let epsilon = Math.pow(10, precision * -1);
+function setPrecision(precision) {
+    precision = 8;
+    epsilon = Math.pow(10, precision * -1);
+}
 function fixRoundingError(num) {
     return Math.abs(num) <= epsilon ? 0 : Number(num.toPrecision(precision));
 }

@@ -1,7 +1,9 @@
 #include <math.h>
 #include <emscripten/bind.h>
+#include <iostream>
 
 #include "Vector.h"
+#include "mutil.h"
 
 // default constructor
 Vector::Vector(double x, double y, double z):
@@ -75,6 +77,19 @@ Vector Vector::operator-(const Vector &vec2)
     return Vector{getX() - vec2.getX(), getY() - vec2.getY(), getZ() - vec2.getZ()};
 }
 
+bool Vector::operator==(const Vector &vec2)
+{
+    return withinPrecision(getX(), vec2.getX()) &&
+            withinPrecision(getY(), vec2.getY()) &&
+            withinPrecision(getZ(), vec2.getZ());
+}
+
+std::ostream& operator<<(std::ostream &out, Vector &vec)
+{
+    out << "Vector{" << vec.getX() << ", " << vec.getY() << ", " << vec.getZ() << "}(" << vec.getMagnitude() << ")";
+    return out;
+}
+
 double Vector::dot(const Vector &vec2)
 {
     return getX() * vec2.getX() + getY() * vec2.getY() + getZ() * vec2.getZ();
@@ -87,6 +102,11 @@ Vector Vector::cross(const Vector &vec2)
         (getZ() * vec2.getX()) - (getX() * vec2.getZ()),
         (getX() * vec2.getY()) - (getY() * vec2.getX())
     };
+}
+
+Vector Vector::normalize()
+{
+    return *this * (1/mag);
 }
 
 EMSCRIPTEN_BINDINGS(vector_bindings) {
