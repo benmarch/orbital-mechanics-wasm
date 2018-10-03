@@ -19,3 +19,19 @@ bool withinPrecision(double a, double b)
 {
     return abs(a - b) < PRECISION;
 }
+
+bool withinPrecision(const Vector &a, const Vector &b)
+{
+    return abs(a.getX() - b.getX()) < PRECISION && abs(a.getY() - b.getY()) < PRECISION && abs(a.getY() - b.getY()) < PRECISION;
+}
+
+bool withinPrecision(double a, double b, double relEpsilon)
+{
+    // Check if the numbers are really close -- needed when comparing numbers near zero.
+    double diff = fabs(a - b);
+    if (diff <= PRECISION)
+        return true;
+
+    // Otherwise fall back to Knuth's algorithm
+    return diff <= ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * relEpsilon);
+}

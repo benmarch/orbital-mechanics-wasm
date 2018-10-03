@@ -45,7 +45,7 @@ void ClassicalElementsGenerator::calculateInclination()
 void ClassicalElementsGenerator::calculateNodalVector()
 {
     // there is no ascending node vector for equatorial orbits
-    if (m_elements.i == 0) {
+    if (isEquatorialOrbit()) {
         m_elements.n = NULL;
         return;
     }
@@ -57,7 +57,8 @@ void ClassicalElementsGenerator::calculateNodalVector()
 void ClassicalElementsGenerator::calculateRightAscensionOfTheAscendingNode()
 {
     // there is no ascending node for equatorial orbits
-    if (m_elements.i == 0) {
+    if (isEquatorialOrbit()) {
+        m_elements.Om = NULL;
         return;
     }
 
@@ -79,19 +80,23 @@ void ClassicalElementsGenerator::calculateRightAscensionOfTheAscendingNode()
 void ClassicalElementsGenerator::calculateArgumentOfPerigee()
 {
     // there is no perigee for circular or open orbits
-    if (m_elements.e.getMagnitude() == 0 || m_elements.e.getMagnitude() >= 1) {
+    if (isEquatorialOrbit() || isOpenOrbit()) {
+        m_elements.o = NULL;
         return;
     }
 
-    double argumentOfPerigee = fixError(acos(m_elements.n.dot(m_elements.e) / m_elements.n.getMagnitude() / m_elements.e.getMagnitude()));
+    double argumentOfPerigee = acos(m_elements.n.dot(m_elements.e) / m_elements.n.getMagnitude() / m_elements.e.getMagnitude());
     double ek = fixError(m_elements.e.getZ());
+
+    Vector n = m_elements.n.normalize();
+    Vector e = m_elements.e.normalize();
 
     // quadrant check
     if (ek > 0) {
         m_elements.o = argumentOfPerigee;
     } else if (ek < 0) {
         m_elements.o = 2*M_PI - argumentOfPerigee;
-    } else if (fixError(m_elements.n.normalize()) == fixError(m_elements.e.normalize())) {
+    } else if (withinPrecision(n, e)) {
         m_elements.o = 0;
     } else {
         m_elements.o = M_PI;
@@ -101,7 +106,8 @@ void ClassicalElementsGenerator::calculateArgumentOfPerigee()
 void ClassicalElementsGenerator::calculateTrueAnomaly()
 {
     // there is no perigee for circular or open orbits
-    if (m_elements.e.getMagnitude() == 0 || m_elements.e.getMagnitude() >= 1) {
+    if (isCircularOrbit() || isOpenOrbit()) {
+        m_elements.nu = NULL;
         return;
     }
 
@@ -113,7 +119,7 @@ void ClassicalElementsGenerator::calculateTrueAnomaly()
         m_elements.nu = trueAnomaly;
     } else if (phi < 0) {
         m_elements.nu =  2*M_PI - trueAnomaly;
-    } else if (m_radius.getMagnitude() == m_elements.a * (1 - m_elements.e.getMagnitude())) {
+    } else if (withinPrecision(m_radius.getMagnitude(), m_elements.a * (1 - m_elements.e.getMagnitude()))) {
         m_elements.nu = 0;
     } else {
         m_elements.nu = M_PI;
@@ -123,15 +129,16 @@ void ClassicalElementsGenerator::calculateTrueAnomaly()
 void ClassicalElementsGenerator::calculateArgumentOfLatitude()
 {
     // there is no ascending node for equatorial orbits
-    if (m_elements.i == 0) {
+    if (isEquatorialOrbit()) {
+        m_elements.u = NULL;
         return;
     }
-
+/*
     // if both Argument of Perigee and True Anomaly are defined, this is the sum
     if (m_elements.o != NULL && m_elements.nu != NULL) {
         m_elements.u = m_elements.o + m_elements.nu;
         return;
-    }
+    }*/
 
     double argumentOfLatitude = acos(m_radius.dot(m_elements.n) / m_radius.getMagnitude() / m_elements.n.getMagnitude());
     Vector r = fixError(m_radius);
@@ -153,15 +160,16 @@ void ClassicalElementsGenerator::calculateArgumentOfLatitude()
 void ClassicalElementsGenerator::calculateLongitudeOfPerigee()
 {
     // there is no perigee for circular or open orbits
-    if (m_elements.e.getMagnitude() == 0 || m_elements.e.getMagnitude() >= 1) {
+    if (isCircularOrbit() || isOpenOrbit()) {
+        m_elements.Pi = NULL;
         return;
     }
 
-    // if both Right Ascention of the Ascending Node and Argument of Perigee are defined, this is the sum
+/*    // if both Right Ascention of the Ascending Node and Argument of Perigee are defined, this is the sum
     if (m_elements.Om != NULL && m_elements.o != NULL) {
         m_elements.Pi = m_elements.Om + m_elements.o;
         return;
-    }
+    }*/
 
     double longitudeOfPerigee = acos(m_elements.e.getX() / m_elements.e.getMagnitude());
     Vector e = fixError(m_elements.e);
@@ -180,11 +188,11 @@ void ClassicalElementsGenerator::calculateLongitudeOfPerigee()
 
 void ClassicalElementsGenerator::calculateTrueLongitude()
 {
-    // if both True Anomaly and Longitude of Perigee are defined, this is the sum
+/*    // if both True Anomaly and Longitude of Perigee are defined, this is the sum
     if (m_elements.nu != NULL && m_elements.Pi != NULL) {
         m_elements.l = m_elements.nu + m_elements.Pi;
         return;
-    }
+    }*/
 
     double trueLongitude = acos(m_radius.getX() / m_radius.getMagnitude());
     Vector r = fixError(m_radius);
@@ -199,6 +207,21 @@ void ClassicalElementsGenerator::calculateTrueLongitude()
     } else {
         m_elements.l = M_PI;
     }
+}
+
+bool ClassicalElementsGenerator::isEquatorialOrbit()
+{
+    return withinPrecision(m_elements.i, 0, 0.0001);
+}
+
+bool ClassicalElementsGenerator::isCircularOrbit()
+{
+    return withinPrecision(m_elements.e, 0);
+}
+
+bool ClassicalElementsGenerator::isOpenOrbit()
+{
+    return withinPrecision(m_elements.e.getMagnitude(), 1) || m_elements.e.getMagnitude() >= 1;
 }
 
 ClassicalElements ClassicalElementsGenerator::generateFromStateVectors(Vector &position, Vector &velocity)

@@ -102,7 +102,7 @@
                 e: fixRoundingError(magnitude(elements.e)) || 0,
                 i: (fixRoundingError(elements.i * 180/Math.PI) || 0) + ' degrees',
                 Om: fixRoundingError(elements.i) === 0 ? 'N/A' : (fixRoundingError(elements.Om * 180/Math.PI) || 0) + ' degrees',
-                o: fixRoundingError(magnitude(elements.e)) === 0 ? 'N/A' : (fixRoundingError(elements.o * 180/Math.PI) || 0) + ' degrees',
+                o: fixRoundingError(magnitude(elements.e)) === 0 || fixRoundingError(elements.i) === 0 ? 'N/A' : (fixRoundingError(elements.o * 180/Math.PI) || 0) + ' degrees',
                 nu: fixRoundingError(magnitude(elements.e)) === 0 ? 'N/A' : (fixRoundingError(elements.nu * 180/Math.PI) || 0) + ' degrees',
                 u: fixRoundingError(elements.i) === 0 ? 'N/A' : (fixRoundingError(elements.u * 180/Math.PI) || 0) + ' degrees',
                 Pi: (magnitude(elements.e)) === 0 ? 'N/A' : (fixRoundingError(elements.Pi * 180/Math.PI) || 0) + ' degrees',
@@ -111,7 +111,9 @@
         }
 
         regenerate() {
-            var elements = this.getDisplayValues(this.orbit.generateClassicalElements(this.stateVectors));
+            var rawElements = this.orbit.generateClassicalElements(this.stateVectors);
+            var elements = this.getDisplayValues(rawElements);
+//            console.log(rawElements)
 
             this.elementsElem.innerHTML = `
                 <dl>
