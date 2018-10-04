@@ -3,10 +3,9 @@
 #include <iostream>
 
 #include "StateVectorGenerator.h"
-#include "constants.h"
 #include "mutil.h"
 
-StateVectors StateVectorGenerator::generateFromClassicalElements(ClassicalElements elements)
+StateVectors StateVectorGenerator::generateFromOrbitalElements(OrbitalElements elements)
 {
     m_elements = elements;
 
@@ -98,13 +97,8 @@ bool StateVectorGenerator::isOpenOrbit()
 }
 
 EMSCRIPTEN_BINDINGS(state_vector_bindings) {
-    emscripten::value_object<StateVectors>("StateVectors")
-        .field("position", &StateVectors::position)
-        .field("velocity", &StateVectors::velocity)
-        ;
-
     emscripten::class_<StateVectorGenerator>("StateVectorGenerator")
         .constructor()
-        .function("generateFromClassicalElements", &StateVectorGenerator::generateFromClassicalElements)
+        .function("generateFromOrbitalElements", &StateVectorGenerator::generateFromOrbitalElements)
         ;
 };

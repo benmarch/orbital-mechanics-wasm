@@ -2,7 +2,8 @@
 #define ORBITAL_MECHANICS_ORBIT_H
 
 #include "Vector.h"
-#include "ClassicalElementsGenerator.h"
+#include "constants.h"
+#include "OrbitalElementsGenerator.h"
 #include "StateVectorGenerator.h"
 
 class Orbit
@@ -11,11 +12,11 @@ public:
     Orbit();
     ~Orbit();
 
-    ClassicalElements generateClassicalElements(StateVectors &stateVectors);
-    StateVectors generateStateVectors(ClassicalElements elements);
+    OrbitalElements generateOrbitalElements(StateVectors &stateVectors);
+    StateVectors generateStateVectors(OrbitalElements elements);
 
 private:
-    ClassicalElementsGenerator *m_classicalElementsGenerator;
+    OrbitalElementsGenerator *m_orbitalElementsGenerator;
     StateVectorGenerator *m_stateVectorGenerator;
 };
 

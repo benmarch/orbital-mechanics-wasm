@@ -8,7 +8,7 @@ class Application
 {
 public:
     Orbit createOrbit(StateVectors stateVectors);
-    Orbit createOrbit(ClassicalElements elements);
+    Orbit createOrbit(OrbitalElements elements);
 };
 
 #endif //ORBITAL_MECHANICS_APPLICATION_H

@@ -1,4 +1,4 @@
-<template id="ClassicalElementsGeneratorTemplate">
+<template id="OrbitalElementsGeneratorTemplate">
     <style>
         dt, dd {
             float: left;
@@ -27,14 +27,14 @@
 </template>
 
 <script>
-    const classicalElementsGeneratorDoc = document.currentScript.ownerDocument;
+    const orbitalElementsGeneratorDoc = document.currentScript.ownerDocument;
 
     /*
      position: [8228, 389, 6888],
      velocity: [-0.7, 6.6, -0.6]
      */
 
-    class ClassicalElementsGenerator extends HTMLElement {
+    class OrbitalElementsGenerator extends HTMLElement {
         orbit = new Module.Orbit();
         elementsElem;
         fields = [];
@@ -61,7 +61,7 @@
             const shadowRoot = this.attachShadow({mode:'open'});
 
             // Adds a template clone into shadow root.
-            shadowRoot.appendChild(document.importNode(classicalElementsGeneratorDoc.getElementById('ClassicalElementsGeneratorTemplate').content, true));
+            shadowRoot.appendChild(document.importNode(orbitalElementsGeneratorDoc.getElementById('OrbitalElementsGeneratorTemplate').content, true));
             this.elementsElem = shadowRoot.getElementById('elements');
 
             this.regenerate();
@@ -111,7 +111,7 @@
         }
 
         regenerate() {
-            var rawElements = this.orbit.generateClassicalElements(this.stateVectors);
+            var rawElements = this.orbit.generateOrbitalElements(this.stateVectors);
             var elements = this.getDisplayValues(rawElements);
 //            console.log(rawElements)
 
@@ -148,5 +148,5 @@
         }
     }
 
-    window.customElements.define('classical-elements-generator', ClassicalElementsGenerator);
+    window.customElements.define('classical-elements-generator', OrbitalElementsGenerator);
 </script>

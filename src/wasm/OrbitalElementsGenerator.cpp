@@ -2,7 +2,7 @@
 #include <emscripten/bind.h>
 #include <iostream>
 
-#include "ClassicalElementsGenerator.h"
+#include "OrbitalElementsGenerator.h"
 #include "constants.h"
 #include "mutil.h"
 
@@ -11,7 +11,7 @@ using namespace std;
 /**
  * Calculates epsilon (specific mechanical energy)
  */
-void ClassicalElementsGenerator::calculateTotalMechanicalEnergy()
+void OrbitalElementsGenerator::calculateTotalMechanicalEnergy()
 {
     m_elements.eps = pow(m_velocity.getMagnitude(), 2)/2 - MU/m_radius.getMagnitude();
 }
@@ -19,12 +19,12 @@ void ClassicalElementsGenerator::calculateTotalMechanicalEnergy()
 /**
  * Calculates a (semi-major axis)
  */
-void ClassicalElementsGenerator::calculateSemimajorAxis()
+void OrbitalElementsGenerator::calculateSemimajorAxis()
 {
     m_elements.a = -1*MU/2/m_elements.eps;
 }
 
-void ClassicalElementsGenerator::calculateEccentricityVector()
+void OrbitalElementsGenerator::calculateEccentricityVector()
 {
     Vector scaledPosition = m_radius * ((1 / MU) * (pow(m_velocity.getMagnitude(), 2) - MU / m_radius.getMagnitude()));
     Vector scaledVelocity = m_velocity * ((1 / MU) * m_radius.dot(m_velocity));
@@ -32,17 +32,17 @@ void ClassicalElementsGenerator::calculateEccentricityVector()
     m_elements.e = scaledPosition - scaledVelocity;
 }
 
-void ClassicalElementsGenerator::calculateAngularMomentum()
+void OrbitalElementsGenerator::calculateAngularMomentum()
 {
     m_elements.h = m_radius.cross(m_velocity);
 }
 
-void ClassicalElementsGenerator::calculateInclination()
+void OrbitalElementsGenerator::calculateInclination()
 {
     m_elements.i = acos(m_elements.h.getZ()/m_elements.h.getMagnitude());
 }
 
-void ClassicalElementsGenerator::calculateNodalVector()
+void OrbitalElementsGenerator::calculateNodalVector()
 {
     // there is no ascending node vector for equatorial orbits
     if (isEquatorialOrbit()) {
@@ -54,7 +54,7 @@ void ClassicalElementsGenerator::calculateNodalVector()
     m_elements.n = k_hat.cross(m_elements.h);
 }
 
-void ClassicalElementsGenerator::calculateRightAscensionOfTheAscendingNode()
+void OrbitalElementsGenerator::calculateRightAscensionOfTheAscendingNode()
 {
     // there is no ascending node for equatorial orbits
     if (isEquatorialOrbit()) {
@@ -77,7 +77,7 @@ void ClassicalElementsGenerator::calculateRightAscensionOfTheAscendingNode()
     }
 }
 
-void ClassicalElementsGenerator::calculateArgumentOfPerigee()
+void OrbitalElementsGenerator::calculateArgumentOfPerigee()
 {
     // there is no perigee for circular or open orbits
     if (isEquatorialOrbit() || isOpenOrbit()) {
@@ -103,7 +103,7 @@ void ClassicalElementsGenerator::calculateArgumentOfPerigee()
     }
 }
 
-void ClassicalElementsGenerator::calculateTrueAnomaly()
+void OrbitalElementsGenerator::calculateTrueAnomaly()
 {
     // there is no perigee for circular or open orbits
     if (isCircularOrbit() || isOpenOrbit()) {
@@ -126,7 +126,7 @@ void ClassicalElementsGenerator::calculateTrueAnomaly()
     }
 }
 
-void ClassicalElementsGenerator::calculateArgumentOfLatitude()
+void OrbitalElementsGenerator::calculateArgumentOfLatitude()
 {
     // there is no ascending node for equatorial orbits
     if (isEquatorialOrbit()) {
@@ -151,7 +151,7 @@ void ClassicalElementsGenerator::calculateArgumentOfLatitude()
     }
 }
 
-void ClassicalElementsGenerator::calculateLongitudeOfPerigee()
+void OrbitalElementsGenerator::calculateLongitudeOfPerigee()
 {
     // there is no perigee for circular or open orbits
     if (isCircularOrbit() || isOpenOrbit()) {
@@ -174,7 +174,7 @@ void ClassicalElementsGenerator::calculateLongitudeOfPerigee()
     }
 }
 
-void ClassicalElementsGenerator::calculateTrueLongitude()
+void OrbitalElementsGenerator::calculateTrueLongitude()
 {
     double trueLongitude = acos(m_radius.getX() / m_radius.getMagnitude());
     Vector r = fixError(m_radius);
@@ -191,22 +191,22 @@ void ClassicalElementsGenerator::calculateTrueLongitude()
     }
 }
 
-bool ClassicalElementsGenerator::isEquatorialOrbit()
+bool OrbitalElementsGenerator::isEquatorialOrbit()
 {
     return withinPrecision(m_elements.i, 0, 0.0001);
 }
 
-bool ClassicalElementsGenerator::isCircularOrbit()
+bool OrbitalElementsGenerator::isCircularOrbit()
 {
     return withinPrecision(m_elements.e, 0);
 }
 
-bool ClassicalElementsGenerator::isOpenOrbit()
+bool OrbitalElementsGenerator::isOpenOrbit()
 {
     return withinPrecision(m_elements.e.getMagnitude(), 1) || m_elements.e.getMagnitude() >= 1;
 }
 
-ClassicalElements ClassicalElementsGenerator::generateFromStateVectors(Vector &position, Vector &velocity)
+OrbitalElements OrbitalElementsGenerator::generateFromStateVectors(Vector &position, Vector &velocity)
 {
     m_radius = position;
     m_velocity = velocity;
@@ -229,20 +229,8 @@ ClassicalElements ClassicalElementsGenerator::generateFromStateVectors(Vector &p
 
 
 EMSCRIPTEN_BINDINGS(elements_bindings) {
-    emscripten::value_object<ClassicalElements>("ClassicalElements")
-        .field("a", &ClassicalElements::a)
-        .field("e", &ClassicalElements::e)
-        .field("i", &ClassicalElements::i)
-        .field("o", &ClassicalElements::o)
-        .field("Om", &ClassicalElements::Om)
-        .field("nu", &ClassicalElements::nu)
-        .field("u", &ClassicalElements::u)
-        .field("Pi", &ClassicalElements::Pi)
-        .field("l", &ClassicalElements::l)
-    ;
-
-    emscripten::class_<ClassicalElementsGenerator>("ClassicalElementsGenerator")
+    emscripten::class_<OrbitalElementsGenerator>("OrbitalElementsGenerator")
         .constructor()
-        .function("generateFromStateVectors", &ClassicalElementsGenerator::generateFromStateVectors)
+        .function("generateFromStateVectors", &OrbitalElementsGenerator::generateFromStateVectors)
     ;
 };

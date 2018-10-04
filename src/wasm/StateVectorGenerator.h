@@ -2,27 +2,17 @@
 #define ORBITAL_MECHANICS_STATEVECTORGENERATOR_H
 
 #include <functional>
-#include "ClassicalElementsGenerator.h"
-
-typedef struct {
-    Vector position;
-    Vector velocity;
-} StateVectors;
-
-typedef struct {
-    Vector row1;
-    Vector row2;
-    Vector row3;
-} RotationMatrix;
+#include "constants.h"
+#include "OrbitalElementsGenerator.h"
 
 class StateVectorGenerator
 {
 public:
-    StateVectors generateFromClassicalElements(ClassicalElements elements);
+    StateVectors generateFromOrbitalElements(OrbitalElements elements);
 
 private:
     StateVectors m_state_vectors;
-    ClassicalElements m_elements;
+    OrbitalElements m_elements;
     RotationMatrix m_rotation_matrix;
 
     void determineRotationMatrix();
