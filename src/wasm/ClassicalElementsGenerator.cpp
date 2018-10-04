@@ -139,9 +139,9 @@ void ClassicalElementsGenerator::calculateArgumentOfLatitude()
     Vector n = fixError(m_elements.n);
 
     // quadrant check
-    if (r.getY() > 0) {
+    if (r.getZ() > 0) {
         m_elements.u = argumentOfLatitude;
-    } else if (r.getY() < 0) {
+    } else if (r.getZ() < 0) {
         m_elements.u =  2*M_PI - argumentOfLatitude;
     } else if ((r + n).getMagnitude() >= r.getMagnitude() + n.getMagnitude()) {
         // pointing in the same direction
