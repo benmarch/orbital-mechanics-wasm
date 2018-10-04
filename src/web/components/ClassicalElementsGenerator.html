@@ -101,12 +101,12 @@
                 a: (fixRoundingError(elements.a) || 0) + ' km',
                 e: fixRoundingError(magnitude(elements.e)) || 0,
                 i: (fixRoundingError(elements.i * 180/Math.PI) || 0) + ' degrees',
-                Om: fixRoundingError(elements.i) === 0 ? 'N/A' : (fixRoundingError(elements.Om * 180/Math.PI) || 0) + ' degrees',
-                o: fixRoundingError(magnitude(elements.e)) === 0 || fixRoundingError(elements.i) === 0 ? 'N/A' : (fixRoundingError(elements.o * 180/Math.PI) || 0) + ' degrees',
-                nu: fixRoundingError(magnitude(elements.e)) === 0 ? 'N/A' : (fixRoundingError(elements.nu * 180/Math.PI) || 0) + ' degrees',
-                u: fixRoundingError(elements.i) === 0 ? 'N/A' : (fixRoundingError(elements.u * 180/Math.PI) || 0) + ' degrees',
-                Pi: (magnitude(elements.e)) === 0 ? 'N/A' : (fixRoundingError(elements.Pi * 180/Math.PI) || 0) + ' degrees',
-                l: (fixRoundingError(elements.l * 180/Math.PI) || 0) + ' degrees'
+                Om: isEquatorialOrbit(elements) ? 'N/A' : (fixRoundingError(elements.Om * 180/Math.PI) || 0) + ' degrees',
+                o: isEquatorialOrbit(elements) || isCircularOrbit(elements) ? 'N/A' : (fixRoundingError(elements.o * 180/Math.PI) || 0) + ' degrees',
+                nu: isCircularOrbit(elements) ? 'N/A' : (fixRoundingError(elements.nu * 180/Math.PI) || 0) + ' degrees',
+                u: isCircularOrbit(elements) && !isEquatorialOrbit(elements) ? (fixRoundingError(elements.u * 180/Math.PI) || 0) + ' degrees' : 'N/A',
+                Pi: isEquatorialOrbit(elements) && !isCircularOrbit(elements) ? (fixRoundingError(elements.Pi * 180/Math.PI) || 0) + ' degrees' : 'N/A',
+                l: isCircularOrbit(elements) && isEquatorialOrbit(elements) ? fixRoundingError(elements.l * 180/Math.PI) || 0 + ' degrees' : 'N/A'
             };
         }
 

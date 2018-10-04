@@ -17,3 +17,15 @@ function printVector(name, vec) {
 function magnitude(vec) {
     return fixRoundingError(Math.sqrt(Math.pow(vec[0], 2) + Math.pow(vec[1], 2) + Math.pow(vec[2], 2)));
 }
+
+function isCircularOrbit(elements) {
+    return fixRoundingError(magnitude(elements.e)) === 0;
+}
+
+function isEquatorialOrbit(elements) {
+    return fixRoundingError(elements.i) === 0;
+}
+
+function isOpenOrbit(elements) {
+    return fixRoundingError(magnitude(elements.e)) >= 1;
+}

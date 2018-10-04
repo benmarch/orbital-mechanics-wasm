@@ -4,10 +4,24 @@
 
 #include "StateVectorGenerator.h"
 #include "constants.h"
+#include "mutil.h"
 
 StateVectors StateVectorGenerator::generateFromClassicalElements(ClassicalElements elements)
 {
     m_elements = elements;
+
+    // adjust for circular and equatorial orbits
+    if (isCircularOrbit() && !isEquatorialOrbit()) {
+        m_elements.o = 0;
+        m_elements.nu = m_elements.u;
+    } else if (isEquatorialOrbit() && !isCircularOrbit() && !isOpenOrbit()) {
+        m_elements.Om = 0;
+        m_elements.o = m_elements.Pi;
+    } else if (isEquatorialOrbit() && isCircularOrbit()) {
+        m_elements.Om = 0;
+        m_elements.o = 0;
+        m_elements.nu = m_elements.l;
+    }
 
     determineRotationMatrix();
     calculatePosition();
@@ -18,9 +32,9 @@ StateVectors StateVectorGenerator::generateFromClassicalElements(ClassicalElemen
 
 void StateVectorGenerator::determineRotationMatrix()
 {
-    double O = m_elements.Om;
-    double o = m_elements.o;
-    double i = m_elements.i;
+    const double &O = m_elements.Om;
+    const double &o = m_elements.o;
+    const double &i = m_elements.i;
 
     Vector row1 = Vector {
             cos(O) * cos(o) - sin(O) * sin(o) * cos(i),
@@ -45,9 +59,9 @@ void StateVectorGenerator::determineRotationMatrix()
 
 Vector StateVectorGenerator::rotateToIJK(Vector &vec)
 {
-    double i = m_rotation_matrix.row1.getX() * vec.getX() + m_rotation_matrix.row1.getY() * vec.getY() + m_rotation_matrix.row1.getZ() * vec.getZ();
-    double j = m_rotation_matrix.row2.getX() * vec.getX() + m_rotation_matrix.row2.getY() * vec.getY() + m_rotation_matrix.row2.getZ() * vec.getZ();
-    double k = m_rotation_matrix.row3.getX() * vec.getX() + m_rotation_matrix.row3.getY() * vec.getY() + m_rotation_matrix.row3.getZ() * vec.getZ();
+    double i = m_rotation_matrix.row1.dot(vec);
+    double j = m_rotation_matrix.row2.dot(vec);
+    double k = m_rotation_matrix.row3.dot(vec);
 
     return Vector { i, j, k };
 }
@@ -66,6 +80,21 @@ void StateVectorGenerator::calculateVelocity()
     Vector velocityPQW = Vector { speed * sin(m_elements.nu) * -1, speed * (m_elements.e.getMagnitude() + cos(m_elements.nu)), 0 };
 
     m_state_vectors.velocity = rotateToIJK(velocityPQW);
+}
+
+bool StateVectorGenerator::isEquatorialOrbit()
+{
+    return withinPrecision(m_elements.i, 0, 0.0001);
+}
+
+bool StateVectorGenerator::isCircularOrbit()
+{
+    return withinPrecision(m_elements.e, 0);
+}
+
+bool StateVectorGenerator::isOpenOrbit()
+{
+    return withinPrecision(m_elements.e.getMagnitude(), 1) || m_elements.e.getMagnitude() >= 1;
 }
 
 EMSCRIPTEN_BINDINGS(state_vector_bindings) {

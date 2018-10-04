@@ -1,4 +1,11 @@
 <template id="AdjustableInputTemplate">
+    <style>
+        :host {
+            display: block;
+            contain: content;
+        }
+    </style>
+
     <div data-component="AdjustableInput" class="adjustable-input">
         <input type="range" class="adjustable-input__range">
         <input type="number" class="adjustable-input__number">
@@ -49,6 +56,7 @@
             this.rangeInput.value = value;
             this.numberInput.value = value;
             this.value = value;
+            this.setAttribute('value', value);
 
             this.dispatchEvent(new Event('input'))
         }

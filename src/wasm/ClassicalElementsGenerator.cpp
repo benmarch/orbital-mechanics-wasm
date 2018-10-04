@@ -133,12 +133,6 @@ void ClassicalElementsGenerator::calculateArgumentOfLatitude()
         m_elements.u = NULL;
         return;
     }
-/*
-    // if both Argument of Perigee and True Anomaly are defined, this is the sum
-    if (m_elements.o != NULL && m_elements.nu != NULL) {
-        m_elements.u = m_elements.o + m_elements.nu;
-        return;
-    }*/
 
     double argumentOfLatitude = acos(m_radius.dot(m_elements.n) / m_radius.getMagnitude() / m_elements.n.getMagnitude());
     Vector r = fixError(m_radius);
@@ -165,12 +159,6 @@ void ClassicalElementsGenerator::calculateLongitudeOfPerigee()
         return;
     }
 
-/*    // if both Right Ascention of the Ascending Node and Argument of Perigee are defined, this is the sum
-    if (m_elements.Om != NULL && m_elements.o != NULL) {
-        m_elements.Pi = m_elements.Om + m_elements.o;
-        return;
-    }*/
-
     double longitudeOfPerigee = acos(m_elements.e.getX() / m_elements.e.getMagnitude());
     Vector e = fixError(m_elements.e);
 
@@ -188,12 +176,6 @@ void ClassicalElementsGenerator::calculateLongitudeOfPerigee()
 
 void ClassicalElementsGenerator::calculateTrueLongitude()
 {
-/*    // if both True Anomaly and Longitude of Perigee are defined, this is the sum
-    if (m_elements.nu != NULL && m_elements.Pi != NULL) {
-        m_elements.l = m_elements.nu + m_elements.Pi;
-        return;
-    }*/
-
     double trueLongitude = acos(m_radius.getX() / m_radius.getMagnitude());
     Vector r = fixError(m_radius);
 
