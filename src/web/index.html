@@ -32,18 +32,15 @@
                     <state-vector-generator></state-vector-generator>
                 </div>
                 <div class="narrow-column">
-                    <button id="transferStateVectorsButton" onclick="transferStateVectors()">Copy State Vectors --></button><br>
-                    <button id="transferOrbitalElementsButton" onclick="transferOrbitalElements()"><-- Copy Orbital Elements</button>
-
-                    <br><br>
-
+                    <button id="transferStateVectorsButton" onclick="transferStateVectors()">Copy State Vectors --></button>
                     <label>
-                        <span>Auto copy State Vectors --></span>
+                        <span>Auto</span>
                         <input type="checkbox" onchange="toggleAutoTransferSV(event)">
                     </label>
                     <br>
+                    <button id="transferOrbitalElementsButton" onclick="transferOrbitalElements()"><-- Copy Orbital Elements</button>
                     <label>
-                        <span><-- Auto copy Orbital Elements</span>
+                        <span>Auto</span>
                         <input type="checkbox" onchange="toggleAutoTransferOE(event)">
                     </label>
                 </div>
