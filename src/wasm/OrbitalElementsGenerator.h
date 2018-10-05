@@ -26,9 +26,6 @@ private:
     void calculateArgumentOfLatitude();
     void calculateLongitudeOfPerigee();
     void calculateTrueLongitude();
-    bool isEquatorialOrbit();
-    bool isCircularOrbit();
-    bool isOpenOrbit();
 };
 
 

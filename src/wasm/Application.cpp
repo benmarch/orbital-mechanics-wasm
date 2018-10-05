@@ -15,14 +15,14 @@ using namespace emscripten;
 Orbit Application::createOrbit(StateVectors stateVectors)
 {
     Orbit orbit{};
-    orbit.generateOrbitalElements(stateVectors);
+    orbit.updateFromStateVectors(stateVectors);
     return orbit;
 }
 
 Orbit Application::createOrbit(OrbitalElements elements)
 {
     Orbit orbit{};
-    orbit.generateStateVectors(elements);
+    orbit.updateFromOrbitalElements(elements);
     return orbit;
 }
 

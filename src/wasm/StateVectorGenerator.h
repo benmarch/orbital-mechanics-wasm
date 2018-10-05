@@ -19,10 +19,6 @@ private:
     Vector rotateToIJK(Vector &vec);
     void calculatePosition();
     void calculateVelocity();
-
-    bool isEquatorialOrbit();
-    bool isCircularOrbit();
-    bool isOpenOrbit();
 };
 
 

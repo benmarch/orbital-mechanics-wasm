@@ -4,19 +4,20 @@
 
 #include "StateVectorGenerator.h"
 #include "mutil.h"
+#include "orbitutil.h"
 
 StateVectors StateVectorGenerator::generateFromOrbitalElements(OrbitalElements elements)
 {
     m_elements = elements;
 
     // adjust for circular and equatorial orbits
-    if (isCircularOrbit() && !isEquatorialOrbit()) {
+    if (isCircularOrbit(elements) && !isEquatorialOrbit(elements)) {
         m_elements.o = 0;
         m_elements.nu = m_elements.u;
-    } else if (isEquatorialOrbit() && !isCircularOrbit() && !isOpenOrbit()) {
+    } else if (isEquatorialOrbit(elements) && !isCircularOrbit(elements) && !isOpenOrbit(elements)) {
         m_elements.Om = 0;
         m_elements.o = m_elements.Pi;
-    } else if (isEquatorialOrbit() && isCircularOrbit()) {
+    } else if (isEquatorialOrbit(elements) && isCircularOrbit(elements)) {
         m_elements.Om = 0;
         m_elements.o = 0;
         m_elements.nu = m_elements.l;
@@ -81,24 +82,3 @@ void StateVectorGenerator::calculateVelocity()
     m_state_vectors.velocity = rotateToIJK(velocityPQW);
 }
 
-bool StateVectorGenerator::isEquatorialOrbit()
-{
-    return withinPrecision(m_elements.i, 0, 0.0001);
-}
-
-bool StateVectorGenerator::isCircularOrbit()
-{
-    return withinPrecision(m_elements.e, 0);
-}
-
-bool StateVectorGenerator::isOpenOrbit()
-{
-    return withinPrecision(m_elements.e.getMagnitude(), 1) || m_elements.e.getMagnitude() >= 1;
-}
-
-EMSCRIPTEN_BINDINGS(state_vector_bindings) {
-    emscripten::class_<StateVectorGenerator>("StateVectorGenerator")
-        .constructor()
-        .function("generateFromOrbitalElements", &StateVectorGenerator::generateFromOrbitalElements)
-        ;
-};

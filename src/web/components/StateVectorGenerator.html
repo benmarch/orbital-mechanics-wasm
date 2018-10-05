@@ -65,6 +65,7 @@
         orbit = new Module.Orbit();
         radiusElem;
         velocityElem;
+        fields = [];
 
         elements = {
             a: 6378,
@@ -96,6 +97,7 @@
             this.regenerate();
 
             shadowRoot.querySelectorAll('adjustable-input').forEach(input => {
+                this.fields.push(input);
                 input.addEventListener('input', this.handleInput);
             });
         }
@@ -124,8 +126,25 @@
             this.dispatchEvent(new Event('input'));
         }
 
+        updateWithOrbitalElements(elements) {
+            this.fields.forEach(field => {
+                let value;
+                if (typeof elements[field.name] === 'number') {
+                    value = elements[field.name];
+                } else {
+                    value = magnitude(elements[field.name]);
+                }
+
+                field.setAttribute('value', this.angleElements.includes(field.name) ? value * 180/Math.PI : value);
+            })
+
+            this.elements = elements;
+            this.regenerate();
+        }
+
         getStateVectors() {
-            return this.orbit.generateStateVectors(this.elements);
+            this.orbit.updateFromOrbitalElements(this.elements);
+            return this.orbit.stateVectors;
         }
 
         regenerate() {

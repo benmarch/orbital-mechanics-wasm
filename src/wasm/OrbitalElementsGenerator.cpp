@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "OrbitalElementsGenerator.h"
-#include "constants.h"
+#include "orbitutil.h"
 #include "mutil.h"
 
 using namespace std;
@@ -45,7 +45,7 @@ void OrbitalElementsGenerator::calculateInclination()
 void OrbitalElementsGenerator::calculateNodalVector()
 {
     // there is no ascending node vector for equatorial orbits
-    if (isEquatorialOrbit()) {
+    if (isEquatorialOrbit(m_elements)) {
         m_elements.n = NULL;
         return;
     }
@@ -57,7 +57,7 @@ void OrbitalElementsGenerator::calculateNodalVector()
 void OrbitalElementsGenerator::calculateRightAscensionOfTheAscendingNode()
 {
     // there is no ascending node for equatorial orbits
-    if (isEquatorialOrbit()) {
+    if (isEquatorialOrbit(m_elements)) {
         m_elements.Om = NULL;
         return;
     }
@@ -80,7 +80,7 @@ void OrbitalElementsGenerator::calculateRightAscensionOfTheAscendingNode()
 void OrbitalElementsGenerator::calculateArgumentOfPerigee()
 {
     // there is no perigee for circular or open orbits
-    if (isEquatorialOrbit() || isOpenOrbit()) {
+    if (isEquatorialOrbit(m_elements) || isOpenOrbit(m_elements)) {
         m_elements.o = NULL;
         return;
     }
@@ -106,7 +106,7 @@ void OrbitalElementsGenerator::calculateArgumentOfPerigee()
 void OrbitalElementsGenerator::calculateTrueAnomaly()
 {
     // there is no perigee for circular or open orbits
-    if (isCircularOrbit() || isOpenOrbit()) {
+    if (isCircularOrbit(m_elements) || isOpenOrbit(m_elements)) {
         m_elements.nu = NULL;
         return;
     }
@@ -129,7 +129,7 @@ void OrbitalElementsGenerator::calculateTrueAnomaly()
 void OrbitalElementsGenerator::calculateArgumentOfLatitude()
 {
     // there is no ascending node for equatorial orbits
-    if (isEquatorialOrbit()) {
+    if (isEquatorialOrbit(m_elements)) {
         m_elements.u = NULL;
         return;
     }
@@ -154,7 +154,7 @@ void OrbitalElementsGenerator::calculateArgumentOfLatitude()
 void OrbitalElementsGenerator::calculateLongitudeOfPerigee()
 {
     // there is no perigee for circular or open orbits
-    if (isCircularOrbit() || isOpenOrbit()) {
+    if (isCircularOrbit(m_elements) || isOpenOrbit(m_elements)) {
         m_elements.Pi = NULL;
         return;
     }
@@ -191,21 +191,6 @@ void OrbitalElementsGenerator::calculateTrueLongitude()
     }
 }
 
-bool OrbitalElementsGenerator::isEquatorialOrbit()
-{
-    return withinPrecision(m_elements.i, 0, 0.0001);
-}
-
-bool OrbitalElementsGenerator::isCircularOrbit()
-{
-    return withinPrecision(m_elements.e, 0);
-}
-
-bool OrbitalElementsGenerator::isOpenOrbit()
-{
-    return withinPrecision(m_elements.e.getMagnitude(), 1) || m_elements.e.getMagnitude() >= 1;
-}
-
 OrbitalElements OrbitalElementsGenerator::generateFromStateVectors(Vector &position, Vector &velocity)
 {
     m_radius = position;
@@ -226,11 +211,3 @@ OrbitalElements OrbitalElementsGenerator::generateFromStateVectors(Vector &posit
 
     return m_elements;
 }
-
-
-EMSCRIPTEN_BINDINGS(elements_bindings) {
-    emscripten::class_<OrbitalElementsGenerator>("OrbitalElementsGenerator")
-        .constructor()
-        .function("generateFromStateVectors", &OrbitalElementsGenerator::generateFromStateVectors)
-    ;
-};

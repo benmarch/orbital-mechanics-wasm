@@ -79,6 +79,7 @@
             this.stateVectors[state][this.dimensionMap[dimension]] = Number(value);
 
             this.regenerate();
+            this.dispatchEvent(new Event('input'));
         }
 
         populateFields() {
@@ -96,24 +97,30 @@
             this.regenerate();
         }
 
+        getElements() {
+            return this.orbit.elements;
+        }
+
         getDisplayValues(elements) {
             return {
                 a: (fixRoundingError(elements.a) || 0) + ' km',
                 e: fixRoundingError(magnitude(elements.e)) || 0,
                 i: (fixRoundingError(elements.i * 180/Math.PI) || 0) + ' degrees',
-                Om: isEquatorialOrbit(elements) ? 'N/A' : (fixRoundingError(elements.Om * 180/Math.PI) || 0) + ' degrees',
-                o: isEquatorialOrbit(elements) || isCircularOrbit(elements) ? 'N/A' : (fixRoundingError(elements.o * 180/Math.PI) || 0) + ' degrees',
-                nu: isCircularOrbit(elements) ? 'N/A' : (fixRoundingError(elements.nu * 180/Math.PI) || 0) + ' degrees',
-                u: isCircularOrbit(elements) && !isEquatorialOrbit(elements) ? (fixRoundingError(elements.u * 180/Math.PI) || 0) + ' degrees' : 'N/A',
-                Pi: isEquatorialOrbit(elements) && !isCircularOrbit(elements) ? (fixRoundingError(elements.Pi * 180/Math.PI) || 0) + ' degrees' : 'N/A',
-                l: isCircularOrbit(elements) && isEquatorialOrbit(elements) ? fixRoundingError(elements.l * 180/Math.PI) || 0 + ' degrees' : 'N/A'
+                Om: this.orbit.isEquatorial ? 'N/A' : (fixRoundingError(elements.Om * 180/Math.PI) || 0) + ' degrees',
+                o: this.orbit.isEquatorial || this.orbit.isCircular ? 'N/A' : (fixRoundingError(elements.o * 180/Math.PI) || 0) + ' degrees',
+                nu: this.orbit.isCircular ? 'N/A' : (fixRoundingError(elements.nu * 180/Math.PI) || 0) + ' degrees',
+                u: this.orbit.isCircular && !this.orbit.isEquatorial ? (fixRoundingError(elements.u * 180/Math.PI) || 0) + ' degrees' : 'N/A',
+                Pi: this.orbit.isEquatorial && !this.orbit.isCircular ? (fixRoundingError(elements.Pi * 180/Math.PI) || 0) + ' degrees' : 'N/A',
+                l: this.orbit.isCircular && this.orbit.isEquatorial ? fixRoundingError(elements.l * 180/Math.PI) || 0 + ' degrees' : 'N/A'
             };
         }
 
         regenerate() {
-            var rawElements = this.orbit.generateOrbitalElements(this.stateVectors);
-            var elements = this.getDisplayValues(rawElements);
-//            console.log(rawElements)
+            this.orbit.updateFromStateVectors(this.stateVectors);
+
+            this.value = this.orbit.elements;
+            var elements = this.getDisplayValues(this.value);
+
 
             this.elementsElem.innerHTML = `
                 <dl>
@@ -148,5 +155,5 @@
         }
     }
 
-    window.customElements.define('classical-elements-generator', OrbitalElementsGenerator);
+    window.customElements.define('orbital-elements-generator', OrbitalElementsGenerator);
 </script>

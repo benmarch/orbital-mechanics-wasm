@@ -12,12 +12,20 @@ public:
     Orbit();
     ~Orbit();
 
-    OrbitalElements generateOrbitalElements(StateVectors &stateVectors);
-    StateVectors generateStateVectors(OrbitalElements elements);
+    void updateFromOrbitalElements(OrbitalElements elements);
+    void updateFromStateVectors(StateVectors &stateVectors);
+    OrbitalElements getElements() const;
+    StateVectors getStateVectors() const;
+
+    bool isCircular() const;
+    bool isOpen() const;
+    bool isEquatorial() const;
 
 private:
     OrbitalElementsGenerator *m_orbitalElementsGenerator;
     StateVectorGenerator *m_stateVectorGenerator;
+    OrbitalElements m_elements;
+    StateVectors m_stateVectors;
 };
 
 
