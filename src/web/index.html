@@ -6,87 +6,14 @@
 
     <script src="om.js"></script>
     <script src="utils.js"></script>
+    <link rel="import" href="components/App.html">
     <link rel="import" href="components/AdjustableInput.html">
     <link rel="import" href="components/StateVectorGenerator.html">
     <link rel="import" href="components/OrbitalElementsGenerator.html">
-
-    <style>
-        .wide-column {
-            width: 40%;
-            float: left;
-        }
-        .narrow-column {
-            width: 20%;
-            float: left;
-        }
-    </style>
-
-    <script>
-        let shouldAutoTransferSV = false;
-        let shouldAutoTransferOE = false;
-
-        // initialize app
-        Module.onRuntimeInitialized = function() {
-            document.getElementById('app').innerHTML = `
-                <div class="wide-column">
-                    <state-vector-generator></state-vector-generator>
-                </div>
-                <div class="narrow-column">
-                    <button id="transferStateVectorsButton" onclick="transferStateVectors()">Copy State Vectors --></button>
-                    <label>
-                        <span>Auto</span>
-                        <input type="checkbox" onchange="toggleAutoTransferSV(event)">
-                    </label>
-                    <br>
-                    <button id="transferOrbitalElementsButton" onclick="transferOrbitalElements()"><-- Copy Orbital Elements</button>
-                    <label>
-                        <span>Auto</span>
-                        <input type="checkbox" onchange="toggleAutoTransferOE(event)">
-                    </label>
-                </div>
-                <div class="wide-column">
-                    <orbital-elements-generator></orbital-elements-generator>
-                </div>
-            `;
-
-            const elementsGenerator = document.querySelector('orbital-elements-generator');
-            const stateVectorGenerator = document.querySelector('state-vector-generator');
-
-            stateVectorGenerator.addEventListener('input', event => {
-                if (shouldAutoTransferSV) {
-                    elementsGenerator.updateWithStateVectors(event.target.value);
-                }
-            });
-
-            elementsGenerator.addEventListener('input', event => {
-                if (shouldAutoTransferOE) {
-                    stateVectorGenerator.updateWithOrbitalElements(event.target.value);
-                }
-            });
-        }
-
-        function transferStateVectors() {
-            const stateVectors = document.querySelector('state-vector-generator').getStateVectors();
-            document.querySelector('orbital-elements-generator').updateWithStateVectors(stateVectors);
-        }
-
-        function transferOrbitalElements() {
-            const elements = document.querySelector('orbital-elements-generator').getElements();
-            document.querySelector('state-vector-generator').updateWithOrbitalElements(elements);
-        }
-
-        function toggleAutoTransferSV(event) {
-            shouldAutoTransferSV = event.target.checked;
-        }
-
-        function toggleAutoTransferOE(event) {
-            shouldAutoTransferOE = event.target.checked;
-        }
-    </script>
 </head>
 <body>
 
-<div id="app"></div>
+<om-app></om-app>
 
 </body>
 </html>
