@@ -17,3 +17,11 @@ function printVector(name, vec) {
 function magnitude(vec) {
     return fixRoundingError(Math.sqrt(Math.pow(vec[0], 2) + Math.pow(vec[1], 2) + Math.pow(vec[2], 2)));
 }
+
+// borrowed from Polymer, creates a template element from html string
+function html(strings, ...values) {
+    const template = document.createElement('template');
+    template.innerHTML = values.reduce((acc, v, idx) =>
+    acc + v + strings[idx + 1], strings[0]);
+    return template;
+};
