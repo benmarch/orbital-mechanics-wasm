@@ -6,7 +6,7 @@
  * Calculates orbital elements
  */
 
-#include "Application.h"
+#include "Application.hpp"
 #include <emscripten/bind.h>
 #include <emscripten/emscripten.h>
 

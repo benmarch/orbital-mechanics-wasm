@@ -3,8 +3,8 @@
 #include <iostream>
 
 #include "StateVectorGenerator.h"
-#include "mutil.h"
-#include "orbitutil.h"
+#include "mutil.hpp"
+#include "orbitutil.hpp"
 
 StateVectors StateVectorGenerator::generateFromOrbitalElements(OrbitalElements elements)
 {

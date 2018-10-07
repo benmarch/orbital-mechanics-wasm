@@ -1,5 +1,5 @@
-#include "orbitutil.h"
-#include "mutil.h"
+#include "orbitutil.hpp"
+#include "mutil.hpp"
 
 bool isCircularOrbit(const OrbitalElements &elements)
 {

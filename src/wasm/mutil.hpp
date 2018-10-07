@@ -1,8 +1,8 @@
 #ifndef ORBITAL_MECHANICS_MUTIL_H
 #define ORBITAL_MECHANICS_MUTIL_H
 
-#include "constants.h"
-#include "Vector.h"
+#include "constants.hpp"
+#include "Vector.hpp"
 
 double fixError(double val);
 

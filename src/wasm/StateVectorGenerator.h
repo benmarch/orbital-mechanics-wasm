@@ -2,8 +2,8 @@
 #define ORBITAL_MECHANICS_STATEVECTORGENERATOR_H
 
 #include <functional>
-#include "constants.h"
-#include "OrbitalElementsGenerator.h"
+#include "constants.hpp"
+#include "OrbitalElementsGenerator.hpp"
 
 class StateVectorGenerator
 {

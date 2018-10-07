@@ -1,7 +1,7 @@
 #ifndef ORBITAL_MECHANICS_CONSTANTS_H
 #define ORBITAL_MECHANICS_CONSTANTS_H
 
-#include "Vector.h"
+#include "Vector.hpp"
 
 const double MU = 398600;
 const double PRECISION = 0.00000000001;

@@ -2,7 +2,7 @@
 #define ORBITAL_MECHANICS_APPLICATION_H
 
 #include <iostream>
-#include "Orbit.h"
+#include "Orbit.hpp"
 
 class Application
 {

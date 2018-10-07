@@ -1,9 +1,9 @@
 #ifndef ORBITAL_MECHANICS_ORBIT_H
 #define ORBITAL_MECHANICS_ORBIT_H
 
-#include "Vector.h"
-#include "constants.h"
-#include "OrbitalElementsGenerator.h"
+#include "Vector.hpp"
+#include "constants.hpp"
+#include "OrbitalElementsGenerator.hpp"
 #include "StateVectorGenerator.h"
 
 class Orbit

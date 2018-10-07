@@ -2,9 +2,9 @@
 #include <emscripten/bind.h>
 #include <iostream>
 
-#include "OrbitalElementsGenerator.h"
-#include "orbitutil.h"
-#include "mutil.h"
+#include "OrbitalElementsGenerator.hpp"
+#include "orbitutil.hpp"
+#include "mutil.hpp"
 
 using namespace std;
 

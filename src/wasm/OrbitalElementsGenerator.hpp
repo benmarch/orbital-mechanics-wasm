@@ -1,8 +1,8 @@
 #ifndef ORBITAL_MECHANICS_ORBITALELEMENTSGENERATOR_H
 #define ORBITAL_MECHANICS_ORBITALELEMENTSGENERATOR_H
 
-#include "Vector.h"
-#include "constants.h"
+#include "Vector.hpp"
+#include "constants.hpp"
 
 class OrbitalElementsGenerator
 {

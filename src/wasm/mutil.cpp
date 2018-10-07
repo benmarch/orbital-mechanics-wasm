@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include "mutil.h"
+#include "mutil.hpp"
 
 double fixError(double val)
 {

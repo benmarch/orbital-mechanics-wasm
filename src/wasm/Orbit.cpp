@@ -1,6 +1,6 @@
 #include <emscripten/bind.h>
-#include "Orbit.h"
-#include "orbitutil.h"
+#include "Orbit.hpp"
+#include "orbitutil.hpp"
 
 Orbit::Orbit():
     m_orbitalElementsGenerator{new OrbitalElementsGenerator()},

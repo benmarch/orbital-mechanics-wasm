@@ -2,8 +2,8 @@
 #include <emscripten/bind.h>
 #include <iostream>
 
-#include "Vector.h"
-#include "mutil.h"
+#include "Vector.hpp"
+#include "mutil.hpp"
 
 // default constructor
 Vector::Vector(double x, double y, double z):
