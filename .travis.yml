@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+  - node
+
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-incoming-64bit bash
+
+script:
+  - docker exec -it emscripten cmake /src
+  - docker exec -it emscripten cmake --build /src --target orbital_mechanics -- -j 8
+
+deploy:
+  provider: s3
+  access_key_id: AKIAIXKXNC7RAQBX33LQ
+  secret_access_key:
+    secure: Ajnc98FatFgmZME4OjcxqtxvAdxP2U0Thc9jKHbafVPqPQCVyMgjozg2kRHYJ/hur86SB1us06abhWAQVfIHRtfEcD3kzQo7f3o6B5x8vCjV24L49ykUmV/bJnxP8gTX4LuyzNF3KRO/ghMrg0xC5CCpcUD4E6r8YUpQ5fnIiIFFiV8SS4YYdlxAYoUOZOSohhE9DXq0Tk9oiG5CpLZFe5+rIRZfbbCSLHUc2sPWCucLC733t5bNX4PMVaZoEj9vStqbrW/2fKQOIhuwwqIAvs6/s/DOfJTexs8iTldiXZJG+TZLauweydXrj4JoqVIEThsVjK8LtJ2s0KbbQVSkuQA5OnT5qqN+Ach2IZKJ/WCpjYsBHxXkfwyZVGx07G5pn9oErJlB9I2nCEl1RVcoYy4HDoQyIoyw8rTznj7YV+FG2fgETseTJBPfJ4mx0V79hw2u4qZh0yhCH9yzxEsBCr0NaE5Y1K7VboQxA9iLgoc2LC2vBz2eJ6Zf1Hew1/2cgAYL1qMOYsW7wCbkzU6bz54n3UIWSFdCpUUc3o1TTk6SP0iVY+EJJgrv13U15IeDAt+vv+XTZcivpvAFkt7JpgT+w5x15GO4dz6Ph7ezv7K5AWkC/jx2LAKsRHOstrKdXRqn4+MItWojQgKN/4zpOjOtny1dAXTwWGU8EwbYo4k=
+  bucket: orbitalmechanicswasm
+  local-dir: build
+  acl: public_read
+  on:
+    repo: benmarch/orbital-mechanics-wasm
