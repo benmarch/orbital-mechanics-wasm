@@ -14,6 +14,7 @@ class AdjustableInput extends HTMLElement {
             </div>
         `;
     }
+
     static get observedAttributes() {
         return ['value'];
     }
@@ -64,12 +65,12 @@ class AdjustableInput extends HTMLElement {
     handleInput(event) {
         this.updateValue(event.target.value);
         this.setAttribute('value', event.target.value);
-        this.dispatchEvent(new Event('input'))
+        this.dispatchEvent(new Event('input'));
     }
 
     registerListeners() {
         this.rangeInput.addEventListener('input', this.handleInput.bind(this));
-        this.numberInput.addEventListener('input', this.handleInput.bind(this))
+        this.numberInput.addEventListener('input', this.handleInput.bind(this));
     }
 
     updateValue(value) {
