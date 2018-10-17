@@ -33,53 +33,51 @@ class StateVectorGenerator extends HTMLElement {
                 <adjustable-input name="a" type="range" min="1" max="100000" value="6378"></adjustable-input>
 
                 <span>Eccentricity (e):</span>
-                <adjustable-input name="e" type="range" min="0" max="0.99" step="0.01"></adjustable-input>
+                <adjustable-input name="e" type="range" min="0" max="0.99" step="0.01" value="0"></adjustable-input>
 
                 <span>Inclination (i):</span>
-                <adjustable-input name="i" type="range" min="0" max="180"></adjustable-input>
+                <adjustable-input name="i" type="range" min="0" max="180" value="0"></adjustable-input>
 
                 <span>Right Ascension of the Ascending Node (Ω):</span>
-                <adjustable-input name="Om" type="range" min="0" max="360"></adjustable-input>
+                <adjustable-input name="Om" type="range" min="0" max="360" value="0"></adjustable-input>
 
                 <span>Argument of Perigee (o):</span>
-                <adjustable-input name="o" type="range" min="0" max="360"></adjustable-input>
+                <adjustable-input name="o" type="range" min="0" max="360" value="0"></adjustable-input>
 
                 <span>True Anomaly (nu):</span>
-                <adjustable-input name="nu" type="range" min="0" max="360"></adjustable-input>
+                <adjustable-input name="nu" type="range" min="0" max="360" value="0"></adjustable-input>
 
                 <span>Argument of Latitude (u):</span>
-                <adjustable-input name="u" type="range" min="0" max="360"></adjustable-input>
+                <adjustable-input name="u" type="range" min="0" max="360" value="0"></adjustable-input>
 
                 <span>Longitude of Perigee (∏):</span>
-                <adjustable-input name="Pi" type="range" min="0" max="360"></adjustable-input>
+                <adjustable-input name="Pi" type="range" min="0" max="360" value="0"></adjustable-input>
 
                 <span>True Longitude (l):</span>
-                <adjustable-input name="l" type="range" min="0" max="360"></adjustable-input>
+                <adjustable-input name="l" type="range" min="0" max="360" value="0"></adjustable-input>
             </form>
         `;
     }
 
     static get angleElements() { return ['i', 'o', 'Om', 'nu', 'u', 'Pi', 'l']; }
 
-    orbit = new Module.Orbit();
-    radiusElem;
-    velocityElem;
-    fields = [];
-
-    elements = {
-        a: 6378,
-        e: [0, 0, 0],
-        i: 0,
-        o: 0,
-        Om: 0,
-        nu: 0,
-        u: 0,
-        Pi: 0,
-        l: 0
-    };
-
     constructor() {
         super();
+
+        this.orbit = new Module.Orbit();
+        this.fields = [];
+
+        this.elements = {
+            a: 6378,
+            e: [0, 0, 0],
+            i: 0,
+            o: 0,
+            Om: 0,
+            nu: 0,
+            u: 0,
+            Pi: 0,
+            l: 0
+        };
 
         const shadowRoot = this.attachShadow({mode:'open'});
         shadowRoot.appendChild(document.importNode(StateVectorGenerator.template.content, true));

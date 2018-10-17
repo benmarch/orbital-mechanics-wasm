@@ -29,23 +29,22 @@ class OrbitalElementsGenerator extends HTMLElement {
         `;
     }
 
-    orbit = new Module.Orbit();
-    elementsElem;
-    fields = [];
-
-    stateVectors = {
-        position: [0, 0, 0],
-        velocity: [0, 0, 0]
-    };
-
-    dimensionMap = {
-        i: 0,
-        j: 1,
-        k: 2
-    };
-
     constructor() {
         super();
+
+        this.orbit = new Module.Orbit();
+        this.fields = [];
+
+        this.stateVectors = {
+            position: [0, 0, 0],
+            velocity: [0, 0, 0]
+        };
+
+        this.dimensionMap = {
+            i: 0,
+            j: 1,
+            k: 2
+        };
 
         const shadowRoot = this.attachShadow({mode:'open'});
         shadowRoot.appendChild(document.importNode(OrbitalElementsGenerator.template.content, true));

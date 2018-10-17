@@ -19,18 +19,14 @@ class AdjustableInput extends HTMLElement {
         return ['value'];
     }
 
-    initialized = false;
-    min = 0;
-    max = 100;
-    step = 1;
-    value = 0;
-
-    name;
-    rangeInput;
-    numberInput;
-
     constructor() {
         super();
+
+        this.initialized = false;
+        this.min = 0;
+        this.max = 100;
+        this.step = 1;
+        this.value = 0;
 
         const shadowRoot = this.attachShadow({mode:'open'});
         shadowRoot.appendChild(document.importNode(AdjustableInput.template.content, true));

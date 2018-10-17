@@ -34,11 +34,11 @@ class App extends HTMLElement {
         `;
     }
 
-    shouldAutoTransferSV = false;
-    shouldAutoTransferOE = false;
-
     constructor() {
         super();
+
+        this.shouldAutoTransferSV = false;
+        this.shouldAutoTransferOE = false;
 
         const shadowRoot = this.attachShadow({mode:'open'});
         shadowRoot.appendChild(document.importNode(App.template.content, true));
