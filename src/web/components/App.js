@@ -1,4 +1,8 @@
-class App extends HTMLElement {
+import Component, { html } from '../Component.js';
+import './StateVectorGenerator.js';
+import './OrbitalElementsGenerator.js';
+
+export default class App extends Component {
     static get template() {
         return html`
             <style>
@@ -40,11 +44,8 @@ class App extends HTMLElement {
         this.shouldAutoTransferSV = false;
         this.shouldAutoTransferOE = false;
 
-        const shadowRoot = this.attachShadow({mode:'open'});
-        shadowRoot.appendChild(document.importNode(App.template.content, true));
-
-        this.stateVectorGenerator = shadowRoot.getElementById('stateVectorGenerator');
-        this.elementsGenerator = shadowRoot.getElementById('orbitalElementsGenerator');
+        this.stateVectorGenerator = this.shadowRoot.getElementById('stateVectorGenerator');
+        this.elementsGenerator = this.shadowRoot.getElementById('orbitalElementsGenerator');
     }
 
     connectedCallback() {

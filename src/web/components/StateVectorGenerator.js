@@ -1,4 +1,8 @@
-class StateVectorGenerator extends HTMLElement {
+import Component, { html } from '../Component.js';
+import { setPrecision, getPrecision, fixRoundingError, printVector, magnitude } from '../utils.js';
+import './AdjustableInput.js';
+
+class StateVectorGenerator extends Component {
     static get template() {
         return html`
             <style>
@@ -62,7 +66,10 @@ class StateVectorGenerator extends HTMLElement {
     static get angleElements() { return ['i', 'o', 'Om', 'nu', 'u', 'Pi', 'l']; }
 
     constructor() {
-        super();
+        super()
+
+        this.radiusElem = this.shadowRoot.getElementById('radius');
+        this.velocityElem = this.shadowRoot.getElementById('velocity');
 
         this.orbit = new Module.Orbit();
         this.fields = [];
@@ -79,20 +86,14 @@ class StateVectorGenerator extends HTMLElement {
             l: 0
         };
 
-        const shadowRoot = this.attachShadow({mode:'open'});
-        shadowRoot.appendChild(document.importNode(StateVectorGenerator.template.content, true));
-
-        this.radiusElem = shadowRoot.getElementById('radius');
-        this.velocityElem = shadowRoot.getElementById('velocity');
-
-        shadowRoot.querySelectorAll('adjustable-input').forEach(input => {
+        this.shadowRoot.querySelectorAll('adjustable-input').forEach(input => {
             this.fields.push(input);
             input.addEventListener('input', this.handleInput.bind(this));
         });
     }
 
     connectedCallback() {
-        this.regenerate();
+        this.updateWithOrbitalElements(this.elements);
     }
 
     handleInput(event) {
@@ -112,7 +113,7 @@ class StateVectorGenerator extends HTMLElement {
                 value = element[0];
             }
 
-            setPrecision(Math.min(String(value).replace(/[\.\-]/g, '').length, precision));
+            setPrecision(Math.min(String(value).replace(/[\.\-]/g, '').length, getPrecision()));
         })
 
         this.regenerate();
@@ -121,14 +122,21 @@ class StateVectorGenerator extends HTMLElement {
 
     updateWithOrbitalElements(elements) {
         this.fields.forEach(field => {
-            let value;
-            if (typeof elements[field.name] === 'number') {
-                value = elements[field.name];
-            } else {
-                value = magnitude(elements[field.name]);
+            // convert to degrees if its an angle
+            const multiplier = StateVectorGenerator.angleElements.includes(field.name) ? 180/Math.PI : 1;
+
+            switch (typeof elements[field.name]) {
+                case 'number':
+                    field.setAttribute('value', elements[field.name]);
+                    break;
+                case 'array':
+                    field.setAttribute('value', magnitude(elements[field.name]));
+                    break;
+                default:
+                    return;
             }
 
-            field.setAttribute('value', StateVectorGenerator.angleElements.includes(field.name) ? value * 180/Math.PI : value);
+            field.setAttribute('value', value * multiplier);
         })
 
         this.elements = elements;

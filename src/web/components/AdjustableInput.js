@@ -1,4 +1,6 @@
-class AdjustableInput extends HTMLElement {
+import Component, { html } from '../Component.js';
+
+export default class AdjustableInput extends Component {
     static get template() {
         return html`
             <style>
@@ -28,12 +30,9 @@ class AdjustableInput extends HTMLElement {
         this.step = 1;
         this.value = 0;
 
-        const shadowRoot = this.attachShadow({mode:'open'});
-        shadowRoot.appendChild(document.importNode(AdjustableInput.template.content, true));
-
         // save references
-        this.rangeInput = shadowRoot.querySelector('.adjustable-input__range');
-        this.numberInput = shadowRoot.querySelector('.adjustable-input__number')
+        this.rangeInput = this.shadowRoot.querySelector('.adjustable-input__range');
+        this.numberInput = this.shadowRoot.querySelector('.adjustable-input__number')
     }
 
     connectedCallback() {

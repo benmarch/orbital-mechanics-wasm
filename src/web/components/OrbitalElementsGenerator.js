@@ -1,4 +1,7 @@
-class OrbitalElementsGenerator extends HTMLElement {
+import Component, { html } from '../Component.js';
+import { fixRoundingError, magnitude } from '../utils.js';
+
+export default class OrbitalElementsGenerator extends Component {
     static get template() {
         return html`
             <style>
@@ -30,7 +33,9 @@ class OrbitalElementsGenerator extends HTMLElement {
     }
 
     constructor() {
-        super();
+        super()
+
+        this.elementsElem = this.shadowRoot.getElementById('elements');
 
         this.orbit = new Module.Orbit();
         this.fields = [];
@@ -46,12 +51,7 @@ class OrbitalElementsGenerator extends HTMLElement {
             k: 2
         };
 
-        const shadowRoot = this.attachShadow({mode:'open'});
-        shadowRoot.appendChild(document.importNode(OrbitalElementsGenerator.template.content, true));
-
-        this.elementsElem = shadowRoot.getElementById('elements');
-
-        shadowRoot.querySelectorAll('input').forEach(input => {
+        this.shadowRoot.querySelectorAll('input').forEach(input => {
             input.addEventListener('input', this.handleInput.bind(this));
             this.fields.push(input);
         });
