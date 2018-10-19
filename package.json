@@ -1,0 +1,20 @@
+{
+  "name": "orbital-mechanics-wasm",
+  "version": "1.0.0",
+  "description": "Utility for performing orbital mechanics calculations",
+  "main": "src/web/index.html",
+  "scripts": {
+    "copy": "cp -R src/web/ build/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benmarch/orbital-mechanics-wasm.git"
+  },
+  "author": "Ben March <bmarch89@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benmarch/orbital-mechanics-wasm/issues"
+  },
+  "homepage": "https://github.com/benmarch/orbital-mechanics-wasm#readme"
+}

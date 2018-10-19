@@ -1,6 +1,8 @@
 import Component, { html } from '../Component.js';
 import { fixRoundingError, magnitude } from '../utils.js';
 
+import './TextInput.js';
+
 export default class OrbitalElementsGenerator extends Component {
     static get template() {
         return html`
@@ -10,20 +12,29 @@ export default class OrbitalElementsGenerator extends Component {
                     width: 50%;
                     margin: 0;
                 }
+
+                text-input {
+                    display: inline-block;
+                    width: 150px;
+                }
+
+                #radius {
+                    margin-bottom: var(--gutter-width);
+                }
             </style>
 
             <form id="stateVectorForm" name="stateVectors">
                 <div id="radius">
                     R:
-                    <input type="number" name="position_i" value="0">I +
-                    <input type="number" name="position_j" value="0">J +
-                    <input type="number" name="position_k" value="0">K
+                    <text-input type="number" name="position_i" value="0"></text-input>I +
+                    <text-input type="number" name="position_j" value="0"></text-input>J +
+                    <text-input type="number" name="position_k" value="0"></text-input>K
                 </div>
                 <div id="velocity">
                     V:
-                    <input type="number" name="velocity_i" value="0">I +
-                    <input type="number" name="velocity_j" value="0">J +
-                    <input type="number" name="velocity_k" value="0">K
+                    <text-input type="number" name="velocity_i" value="0"></text-input>I +
+                    <text-input type="number" name="velocity_j" value="0"></text-input>J +
+                    <text-input type="number" name="velocity_k" value="0"></text-input>K
                 </div>
             </form>
             <br>
@@ -33,25 +44,21 @@ export default class OrbitalElementsGenerator extends Component {
     }
 
     constructor() {
-        super()
-
-        this.elementsElem = this.shadowRoot.getElementById('elements');
+        super();
 
         this.orbit = new Module.Orbit();
         this.fields = [];
-
         this.stateVectors = {
             position: [0, 0, 0],
             velocity: [0, 0, 0]
         };
-
         this.dimensionMap = {
             i: 0,
             j: 1,
             k: 2
         };
 
-        this.shadowRoot.querySelectorAll('input').forEach(input => {
+        this.shadowRoot.querySelectorAll('text-input').forEach(input => {
             input.addEventListener('input', this.handleInput.bind(this));
             this.fields.push(input);
         });
@@ -111,7 +118,7 @@ export default class OrbitalElementsGenerator extends Component {
         var elements = this.getDisplayValues(this.value);
 
 
-        this.elementsElem.innerHTML = `
+        this.elementsElement.innerHTML = `
             <dl>
                 <dt>Semimajor Axis (a):</dt>
                 <dd>${elements.a}</dd>
@@ -125,10 +132,10 @@ export default class OrbitalElementsGenerator extends Component {
                 <dt>Right Ascension (Ω):</dt>
                 <dd>${elements.Om}</dd>
 
-                <dt>Argument of Perigee (o):</dt>
+                <dt>Argument of Perigee (ω):</dt>
                 <dd>${elements.o}</dd>
 
-                <dt>True Anomaly (nu):</dt>
+                <dt>True Anomaly (ν):</dt>
                 <dd>${elements.nu}</dd>
 
                 <dt>Argument of Latitude (u):</dt>

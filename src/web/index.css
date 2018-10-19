@@ -1,0 +1,37 @@
+/* ---------- basic styles --------- */
+*,
+*:after,
+*:before {
+    box-sizing: inherit;
+}
+
+html {
+    box-sizing: border-box;
+    font-size: 10px;
+
+    /* ---------- theme ---------- */
+
+    /* typography */
+    --text-color: #606c76;
+    --font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    --font-size: 1.6rem;
+    --font-weight: 300;
+    --letter-spacing: .01rem;
+    --line-height: 1.6;
+
+    /* grid */
+    --gutter-width: 20px;
+
+    /* form */
+    --input-border: 1px solid #aaa;
+}
+
+body {
+    color: var(--text-color);
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
+    letter-spacing: var(--letter-spacing);
+    line-height: var(--line-height);
+}
+

@@ -45,10 +45,10 @@ class StateVectorGenerator extends Component {
                 <span>Right Ascension of the Ascending Node (Ω):</span>
                 <adjustable-input name="Om" type="range" min="0" max="360" value="0"></adjustable-input>
 
-                <span>Argument of Perigee (o):</span>
+                <span>Argument of Perigee (ω):</span>
                 <adjustable-input name="o" type="range" min="0" max="360" value="0"></adjustable-input>
 
-                <span>True Anomaly (nu):</span>
+                <span>True Anomaly (ν):</span>
                 <adjustable-input name="nu" type="range" min="0" max="360" value="0"></adjustable-input>
 
                 <span>Argument of Latitude (u):</span>
@@ -66,14 +66,10 @@ class StateVectorGenerator extends Component {
     static get angleElements() { return ['i', 'o', 'Om', 'nu', 'u', 'Pi', 'l']; }
 
     constructor() {
-        super()
-
-        this.radiusElem = this.shadowRoot.getElementById('radius');
-        this.velocityElem = this.shadowRoot.getElementById('velocity');
+        super();
 
         this.orbit = new Module.Orbit();
         this.fields = [];
-
         this.elements = {
             a: 6378,
             e: [0, 0, 0],
@@ -135,8 +131,6 @@ class StateVectorGenerator extends Component {
                 default:
                     return;
             }
-
-            field.setAttribute('value', value * multiplier);
         })
 
         this.elements = elements;
@@ -151,8 +145,8 @@ class StateVectorGenerator extends Component {
     regenerate() {
         var stateVectors = this.getStateVectors();
 
-        this.radiusElem.innerHTML = printVector('R', stateVectors.position);
-        this.velocityElem.innerHTML = printVector('V', stateVectors.velocity);
+        this.radiusElement.innerHTML = printVector('R', stateVectors.position);
+        this.velocityElement.innerHTML = printVector('V', stateVectors.velocity);
 
         this.value = stateVectors;
     }

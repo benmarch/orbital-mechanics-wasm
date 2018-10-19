@@ -1,39 +1,59 @@
 import Component, { html } from '../Component.js';
 import './StateVectorGenerator.js';
 import './OrbitalElementsGenerator.js';
+import './Button.js';
 
 export default class App extends Component {
     static get template() {
         return html`
             <style>
-                .wide-column {
-                    width: 40%;
-                    float: left;
+                :host {
+                    display: block;
+                    padding: var(--gutter-width);
                 }
-                .narrow-column {
-                    width: 20%;
-                    float: left;
+
+                #container {
+                    display: grid;
+                    column-gap: var(--gutter-width);
+                    grid-template-columns: 2fr 1fr 2fr;
+                    grid-template-areas: "left center right";
+                }
+
+                #stateVectorGenerator {
+                    grid-area: left;
+                }
+
+                #orbitalElementsGenerator {
+                    grid-area: right;
+                }
+
+                #copyActions {
+                    grid-area: center;
+                    align-self: center;
                 }
             </style>
 
-            <div class="wide-column">
-                <state-vector-generator id="stateVectorGenerator"></state-vector-generator>
-            </div>
-            <div class="narrow-column">
-                <button id="transferStateVectorsButton" onclick="this.getRootNode().host.transferStateVectors()">Copy State Vectors --></button>
-                <label>
-                    <span>Auto</span>
-                    <input type="checkbox" onchange="this.getRootNode().host.toggleAutoTransferSV(event)">
-                </label>
-                <br>
-                <button id="transferOrbitalElementsButton" onclick="this.getRootNode().host.transferOrbitalElements()"><-- Copy Orbital Elements</button>
-                <label>
-                    <span>Auto</span>
-                    <input type="checkbox" onchange="this.getRootNode().host.toggleAutoTransferOE(event)">
-                </label>
-            </div>
-            <div class="wide-column">
-                <orbital-elements-generator id="orbitalElementsGenerator"></orbital-elements-generator>
+            <div id="container">
+                <state-vector-generator id="stateVectorGenerator" on:input="handleStateVectorInput"></state-vector-generator>
+                <orbital-elements-generator id="orbitalElementsGenerator" on:input="handleOrbitalElementsInput"></orbital-elements-generator>
+
+                <div id="copyActions">
+                    <om-button part="button" id="transferStateVectorsButton" on:click="transferStateVectors">
+                        Copy State Vectors &rightarrow;
+                    </om-button>
+                    <label>
+                        <span>Auto</span>
+                        <input type="checkbox" on:change="toggleAutoTransferSV">
+                    </label>
+                    <br><br>
+                    <om-button part="button" id="transferOrbitalElementsButton" on:click="transferOrbitalElements">
+                        &leftarrow; Copy Orbital Elements
+                    </om-button>
+                    <label>
+                        <span>Auto</span>
+                        <input type="checkbox" on:change="toggleAutoTransferOE">
+                    </label>
+                </div>
             </div>
         `;
     }
@@ -43,33 +63,28 @@ export default class App extends Component {
 
         this.shouldAutoTransferSV = false;
         this.shouldAutoTransferOE = false;
-
-        this.stateVectorGenerator = this.shadowRoot.getElementById('stateVectorGenerator');
-        this.elementsGenerator = this.shadowRoot.getElementById('orbitalElementsGenerator');
     }
 
-    connectedCallback() {
-        this.stateVectorGenerator.addEventListener('input', event => {
-            if (this.shouldAutoTransferSV) {
-                this.transferStateVectors();
-            }
-        });
+    handleStateVectorInput() {
+        if (this.shouldAutoTransferSV) {
+            this.transferStateVectors();
+        }
+    }
 
-        this.elementsGenerator.addEventListener('input', event => {
-            if (this.shouldAutoTransferOE) {
-                this.transferOrbitalElements();
-            }
-        });
+    handleOrbitalElementsInput() {
+        if (this.shouldAutoTransferOE) {
+            this.transferOrbitalElements();
+        }
     }
 
     transferStateVectors() {
-        const stateVectors = this.stateVectorGenerator.getStateVectors();
-        this.elementsGenerator.updateWithStateVectors(stateVectors);
+        const stateVectors = this.stateVectorGeneratorElement.getStateVectors();
+        this.orbitalElementsGeneratorElement.updateWithStateVectors(stateVectors);
     }
 
     transferOrbitalElements() {
-        const elements = this.elementsGenerator.getElements();
-        this.stateVectorGenerator.updateWithOrbitalElements(elements);
+        const elements = this.orbitalElementsGeneratorElement.getElements();
+        this.stateVectorGeneratorElement.updateWithOrbitalElements(elements);
     }
 
     toggleAutoTransferSV(event) {
@@ -82,6 +97,10 @@ export default class App extends Component {
 }
 
 // upgrade after WASM loads
-Module.onRuntimeInitialized = () => {
+if (Module.OrbitalMechanics) {
     window.customElements.define('om-app', App);
+} else {
+    Module.onRuntimeInitialized = () => {
+        window.customElements.define('om-app', App);
+    }
 }
