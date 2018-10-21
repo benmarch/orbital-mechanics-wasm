@@ -30,7 +30,7 @@ class MainMenu extends Component {
 
             <nav id="menu">
                 <ul>
-                    <li>My Orbits</li>
+                    <li><a href="#myorbits">My Orbits</a></li>
                     <li><a href="#createorbit">Create an Orbit</a></li>
                     <li>Create Hohmann Transfer</li>
                     <li>Create Bi-elliptic Transfer</li>

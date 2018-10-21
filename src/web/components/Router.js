@@ -1,5 +1,6 @@
 import Component from '../Component.js';
 import './MainMenu.js';
+import './MyOrbits.js';
 import './CreateOrbit.js';
 
 const routes = {

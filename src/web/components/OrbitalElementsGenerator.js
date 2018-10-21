@@ -2,6 +2,7 @@ import Component, { html } from '../Component.js';
 import { fixRoundingError, magnitude } from '../utils.js';
 
 import './TextInput.js';
+import './SaveOrbitButton.js';
 
 export default class OrbitalElementsGenerator extends Component {
     static get template() {
@@ -21,7 +22,13 @@ export default class OrbitalElementsGenerator extends Component {
                 #radius {
                     margin-bottom: var(--gutter-width);
                 }
+
+                #saveOrbitButton {
+                    margin-bottom: var(--gutter-width);
+                }
             </style>
+
+            <save-orbit-button id="saveOrbitButton"></save-orbit-button>
 
             <form id="stateVectorForm" name="stateVectors">
                 <div id="radius">
@@ -66,6 +73,8 @@ export default class OrbitalElementsGenerator extends Component {
 
     connectedCallback() {
         this.regenerate();
+
+        this.saveOrbitButtonElement.setOrbit(this.orbit);
     }
 
     handleInput(event) {

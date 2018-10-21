@@ -1,6 +1,6 @@
 const STORAGE_KEY = 'my-orbits';
 
-class OrbitRepository {
+export default class OrbitRepository {
     constructor() {
         this.storage = window.localStorage;
         this.getOrbits();
@@ -17,6 +17,17 @@ class OrbitRepository {
 
     saveOrbit(name, orbit) {
         this.orbits[name] = orbit;
+        this.persist();
+    }
+
+    deleteOrbit(name) {
+        if (this.getOrbitByName(name)) {
+            delete this.orbits[name];
+            this.persist();
+        }
+    }
+
+    persist() {
         this.storage.setItem(STORAGE_KEY, JSON.stringify(this.orbits));
     }
 }
