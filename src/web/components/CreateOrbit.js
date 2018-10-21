@@ -3,7 +3,7 @@ import './StateVectorGenerator.js';
 import './OrbitalElementsGenerator.js';
 import './Button.js';
 
-export default class App extends Component {
+export default class CreateOrbit extends Component {
     static get template() {
         return html`
             <style>
@@ -96,11 +96,4 @@ export default class App extends Component {
     }
 }
 
-// upgrade after WASM loads
-if (Module.OrbitalMechanics) {
-    window.customElements.define('om-app', App);
-} else {
-    Module.onRuntimeInitialized = () => {
-        window.customElements.define('om-app', App);
-    }
-}
+window.customElements.define('create-orbit', CreateOrbit);

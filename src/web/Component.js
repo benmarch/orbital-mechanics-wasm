@@ -6,9 +6,11 @@ export default class Component extends HTMLElement {
 
         // add a shadow root and populate with the template
         this.attachShadow({mode:'open'});
-        this.shadowRoot.appendChild(document.importNode(new.target.template.content, true));
+        if (new.target.template) {
+            this.shadowRoot.appendChild(document.importNode(new.target.template.content, true));
 
-        this.parseTree();
+            this.parseTree();
+        }
     }
 
     /**
