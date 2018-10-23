@@ -37,7 +37,7 @@ class MainMenu extends Component {
                 <ul>
                     <li><a href="#myorbits">My Orbits</a></li>
                     <li><a href="#createorbit">Create an Orbit</a></li>
-                    <li>Create Hohmann Transfer</li>
+                    <li><a href="#hohmanntransfer">Create Hohmann Transfer</a></li>
                     <li>Create Bi-elliptic Transfer</li>
                     <li>Patched Conic Approximation</li>
                 </ul>

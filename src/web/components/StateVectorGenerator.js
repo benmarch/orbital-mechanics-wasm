@@ -36,7 +36,7 @@ class StateVectorGenerator extends Component {
                 }
             </style>
 
-            <save-orbit-button id="saveOrbitButton"></save-orbit-button>
+            <save-orbit-button id="saveOrbitButton" on:orbitsaved="handleOrbitSaved"></save-orbit-button>
 
             <div id="radius"></div>
             <div id="velocity"></div>
@@ -123,6 +123,11 @@ class StateVectorGenerator extends Component {
 
         this.regenerate();
         this.dispatchEvent(new Event('input'));
+    }
+
+    handleOrbitSaved() {
+        this.orbit = new Module.Orbit();
+        this.regenerate();
     }
 
     updateWithOrbitalElements(elements) {

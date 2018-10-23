@@ -1,11 +1,13 @@
 import Component from '../Component.js';
 import './MainMenu.js';
 import './MyOrbits.js';
+import './HohmannTransfer.js';
 import './CreateOrbit.js';
 
 const routes = {
     'myorbits': 'my-orbits',
     'createorbit/?(?<name>[^/]*)': 'create-orbit',
+    'hohmanntransfer': 'hohmann-transfer',
     '': 'main-menu',
 }
 

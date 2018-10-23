@@ -25,6 +25,7 @@ class SaveOrbitButton extends Component {
 
         if (name) {
             this.orbitRepository.saveOrbit(name, this.orbit);
+            this.dispatchEvent(new CustomEvent('orbitsaved', {name}));
         }
     }
 
