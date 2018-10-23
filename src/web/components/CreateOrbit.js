@@ -1,4 +1,5 @@
 import Component, { html } from '../Component.js';
+import OrbitRepository from '../OrbitRepository.js';
 import './StateVectorGenerator.js';
 import './OrbitalElementsGenerator.js';
 import './Button.js';
@@ -61,8 +62,20 @@ export default class CreateOrbit extends Component {
     constructor() {
         super();
 
+        this.orbitRepository = new OrbitRepository();
         this.shouldAutoTransferSV = false;
         this.shouldAutoTransferOE = false;
+    }
+
+    connectedCallback() {
+        if (this.routeData && this.routeData.name) {
+            const orbitToLoad = this.orbitRepository.getOrbitByName(this.routeData.name);
+
+            if (orbitToLoad) {
+                this.stateVectorGeneratorElement.updateWithOrbitalElements(orbitToLoad.elements);
+                this.orbitalElementsGeneratorElement.updateWithStateVectors(orbitToLoad.stateVectors);
+            }
+        }
     }
 
     handleStateVectorInput() {

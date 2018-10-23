@@ -73,8 +73,6 @@ export default class OrbitalElementsGenerator extends Component {
 
     connectedCallback() {
         this.regenerate();
-
-        this.saveOrbitButtonElement.setOrbit(this.orbit);
     }
 
     handleInput(event) {
@@ -126,6 +124,7 @@ export default class OrbitalElementsGenerator extends Component {
         this.value = this.orbit.elements;
         var elements = this.getDisplayValues(this.value);
 
+        this.saveOrbitButtonElement.setOrbit(this.orbit);
 
         this.elementsElement.innerHTML = `
             <dl>

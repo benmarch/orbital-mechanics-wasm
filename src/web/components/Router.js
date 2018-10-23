@@ -4,9 +4,9 @@ import './MyOrbits.js';
 import './CreateOrbit.js';
 
 const routes = {
-    '': 'main-menu',
     'myorbits': 'my-orbits',
-    'createorbit': 'create-orbit'
+    'createorbit/?(?<name>[^/]*)': 'create-orbit',
+    '': 'main-menu',
 }
 
 class Router extends Component {
@@ -22,13 +22,24 @@ class Router extends Component {
 
     handleHashChange() {
         const hash = window.location.hash.replace('#', '');
+        const routeRegex = Object.keys(routes).find(routeRegex => hash.match(new RegExp(routeRegex)));
 
-        if (routes[hash]) {
+        if (routes[routeRegex]) {
             if (this.routeNode) {
                 this.shadowRoot.removeChild(this.routeNode);
             }
 
-            this.routeNode = document.createElement(routes[hash]);
+            this.routeNode = document.createElement(routes[routeRegex]);
+
+            const groups = hash.match(new RegExp(routeRegex)).groups || {};
+            Object.keys(groups).forEach(groupName => groups[groupName] = window.decodeURIComponent(groups[groupName]));
+
+            this.routeNode.routeData = {
+                route: hash,
+                regex: routeRegex,
+                ...groups,
+            }
+
             this.shadowRoot.appendChild(this.routeNode);
         }
     }

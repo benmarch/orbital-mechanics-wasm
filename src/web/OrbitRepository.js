@@ -16,7 +16,10 @@ export default class OrbitRepository {
     }
 
     saveOrbit(name, orbit) {
-        this.orbits[name] = orbit;
+        this.orbits[name] = {
+            elements: orbit.elements,
+            stateVectors: orbit.stateVectors,
+        };
         this.persist();
     }
 

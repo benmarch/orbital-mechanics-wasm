@@ -1,6 +1,7 @@
 import Component, { html } from '../Component.js';
 import { setPrecision, getPrecision, fixRoundingError, printVector, magnitude } from '../utils.js';
 import './AdjustableInput.js';
+import './SaveOrbitButton.js';
 
 class StateVectorGenerator extends Component {
     static get template() {
@@ -26,11 +27,19 @@ class StateVectorGenerator extends Component {
                     opacity: 1;
                 }
 
+                #velocity {
+                    margin-bottom: var(--gutter-width);
+                }
+
+                #saveOrbitButton {
+                    margin-bottom: var(--gutter-width);
+                }
             </style>
+
+            <save-orbit-button id="saveOrbitButton"></save-orbit-button>
 
             <div id="radius"></div>
             <div id="velocity"></div>
-            <br>
 
             <form id="elementsForm" name="elements">
                 <span>Semimajor Axis (a):</span>
@@ -121,17 +130,12 @@ class StateVectorGenerator extends Component {
             // convert to degrees if its an angle
             const multiplier = StateVectorGenerator.angleElements.includes(field.name) ? 180/Math.PI : 1;
 
-            switch (typeof elements[field.name]) {
-                case 'number':
-                    field.setAttribute('value', elements[field.name]);
-                    break;
-                case 'array':
-                    field.setAttribute('value', magnitude(elements[field.name]));
-                    break;
-                default:
-                    return;
+            if (typeof elements[field.name] === 'number') {
+                field.setAttribute('value', elements[field.name] * multiplier);
+            } else if (Array.isArray(elements[field.name])) {
+                field.setAttribute('value', magnitude(elements[field.name]) * multiplier);
             }
-        })
+        });
 
         this.elements = elements;
         this.regenerate();
@@ -144,6 +148,8 @@ class StateVectorGenerator extends Component {
 
     regenerate() {
         var stateVectors = this.getStateVectors();
+
+        this.saveOrbitButtonElement.setOrbit(this.orbit);
 
         this.radiusElement.innerHTML = printVector('R', stateVectors.position);
         this.velocityElement.innerHTML = printVector('V', stateVectors.velocity);

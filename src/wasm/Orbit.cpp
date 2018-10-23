@@ -18,11 +18,13 @@ Orbit::~Orbit()
 void Orbit::updateFromStateVectors(StateVectors &stateVectors)
 {
     m_elements = m_orbitalElementsGenerator->generateFromStateVectors(stateVectors.position, stateVectors.velocity);
+    m_stateVectors = stateVectors;
 }
 
 void Orbit::updateFromOrbitalElements(OrbitalElements elements)
 {
     m_stateVectors =  m_stateVectorGenerator->generateFromOrbitalElements(elements);
+    m_elements = elements;
 }
 
 OrbitalElements Orbit::getElements() const

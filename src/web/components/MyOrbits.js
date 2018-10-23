@@ -4,6 +4,17 @@ import Component, {html} from '../Component.js';
 class MyOrbits extends Component {
     static get template() {
         return html`
+            <style>
+                a {
+                    color: inherit;
+                    text-decoration: none;
+                }
+
+                a:hover {
+                    text-decoration: underline;
+                }
+            </style>
+
             <ul id="orbitList"></ul>
         `;
     }
@@ -24,7 +35,7 @@ class MyOrbits extends Component {
 
     renderOrbits() {
         const orbits = this.getOrbits();
-        const listItems = Object.entries(orbits).map(([name, orbit]) => `<li>${name}<om-button on:click="handleDelete" data-orbit="${name}">&times;</om-button></li>`);
+        const listItems = Object.entries(orbits).map(([name, orbit]) => `<li><a href="#createorbit/${name}">${name}</a><om-button on:click="handleDelete" data-orbit="${name}">&times;</om-button></li>`);
 
         if (listItems.length) {
             this.orbitListElement.innerHTML = listItems.join('\n');

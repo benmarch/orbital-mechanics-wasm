@@ -30,6 +30,9 @@ export default class AdjustableInput extends Component {
         this.max = 100;
         this.step = 1;
         this.value = 0;
+
+        this.value = this.getAttribute('value') || this.value;
+        this.name = this.getAttribute('name') || '';
     }
 
     connectedCallback() {
@@ -37,8 +40,6 @@ export default class AdjustableInput extends Component {
         this.max = this.rangeElement.max = this.getAttribute('max') || this.max;
         this.min = this.rangeElement.min = this.getAttribute('min') || this.min;
         this.step = this.rangeElement.step = this.getAttribute('step') || this.step;
-        this.value = this.getAttribute('value') || this.value;
-        this.name = this.getAttribute('name') || '';
 
         this.initialized = true;
         this.updateValue(this.value);

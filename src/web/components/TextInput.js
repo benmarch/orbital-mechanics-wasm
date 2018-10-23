@@ -41,7 +41,8 @@ class TextInput extends Component {
     }
     get value() { return this.inputElement.value }
 
-    connectedCallback() {
+    constructor() {
+        super();
         this.name = this.getAttribute('name');
     }
 
