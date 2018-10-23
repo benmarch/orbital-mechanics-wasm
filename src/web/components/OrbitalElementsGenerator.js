@@ -23,12 +23,20 @@ export default class OrbitalElementsGenerator extends Component {
                     margin-bottom: var(--gutter-width);
                 }
 
+                #saveContainer {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                }
+
                 #saveOrbitButton {
                     margin-bottom: var(--gutter-width);
                 }
             </style>
 
-            <save-orbit-button id="saveOrbitButton"></save-orbit-button>
+            <div id="saveContainer">
+                <save-orbit-button id="saveOrbitButton"></save-orbit-button>
+            </div>
 
             <form id="stateVectorForm" name="stateVectors">
                 <div id="radius">
