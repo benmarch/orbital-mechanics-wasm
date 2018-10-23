@@ -13,9 +13,14 @@ class MainMenu extends Component {
                     display: block;
                 }
 
-                #menu li {
+                ul {
+                    padding-left: 0;
+                }
+
+                li {
                     font-size: var(--font-size-large);
                     list-style-type: none;
+                    text-align: center;
                 }
 
                 a {

@@ -1,4 +1,5 @@
 import Component, {html} from '../Component.js';
+import './Header.js';
 import './Router.js';
 
 class OrbitalMechanics extends Component {
@@ -10,6 +11,7 @@ class OrbitalMechanics extends Component {
                 }
             </style>
 
+            <om-header></om-header>
             <om-router></om-router>
         `;
     }
