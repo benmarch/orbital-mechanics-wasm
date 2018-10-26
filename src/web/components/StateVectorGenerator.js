@@ -114,7 +114,7 @@ class StateVectorGenerator extends Component {
             let value;
             if (typeof element === 'number') {
                 value = element;
-            } else if (typeof element === 'array') {
+            } else if (Array.isArray(element)) {
                 value = element[0];
             }
 

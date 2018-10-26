@@ -6,7 +6,7 @@
 
 HohmannTransfer::HohmannTransfer(Orbit &orbitFrom, Orbit &orbitTo)
 {
-    if (!isCircularOrbit(orbitFrom.getElements()) && !isCircularOrbit(orbitTo.getElements())) {
+    if (!isCircularOrbit(orbitFrom.getElements()) || !isCircularOrbit(orbitTo.getElements())) {
         throw "Both orbits must be circular to perform a Hohmann Transfer";
     };
 

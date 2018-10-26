@@ -2,28 +2,11 @@ const STORAGE_KEY = 'my-orbits';
 
 export default class OrbitRepository {
     constructor() {
-        this.orbits = {};
         this.storage = window.localStorage;
-        this.getOrbits();
+        this.orbits = this.retrieveOrbits();
     }
 
     getOrbits() {
-        const parsedOrbits = JSON.parse(this.storage.getItem(STORAGE_KEY) || '{}');
-
-        Object.entries(parsedOrbits).forEach(([name, orbitLike]) => {
-            const orbit = new Module.Orbit();
-
-            if (orbitLike.stateVectors) {
-                orbit.updateFromStateVectors(orbitLike.stateVectors);
-            } else if (orbitLike.elements) {
-                orbit.updateFromOrbitalElements(orbitLike.elements);
-            } else {
-                return;
-            }
-
-            this.orbits[name] = orbit;
-        })
-
         return this.orbits;
     }
 
@@ -42,6 +25,27 @@ export default class OrbitRepository {
             delete this.orbits[name];
             this.persist();
         }
+    }
+
+    retrieveOrbits() {
+        const orbits = {};
+        const parsedOrbits = JSON.parse(this.storage.getItem(STORAGE_KEY) || '{}');
+
+        Object.entries(parsedOrbits).forEach(([name, orbitLike]) => {
+            const orbit = new Module.Orbit();
+
+            if (orbitLike.stateVectors) {
+                orbit.updateFromStateVectors(orbitLike.stateVectors);
+            } else if (orbitLike.elements) {
+                orbit.updateFromOrbitalElements(orbitLike.elements);
+            } else {
+                return;
+            }
+
+            orbits[name] = orbit;
+        });
+
+        return orbits;
     }
 
     persist() {
