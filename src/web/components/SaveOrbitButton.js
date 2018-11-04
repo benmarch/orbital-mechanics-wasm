@@ -10,7 +10,7 @@ class SaveOrbitButton extends Component {
                     display: inline-block;
                 }
             </style>
-            <om-button id="button" on:click="saveOrbit">Save Orbit</om-button>
+            <om-button id="button" on:click="saveOrbit"><slot>Save Orbit</slot></om-button>
         `;
     }
 

@@ -17,6 +17,11 @@ public:
     OrbitalElements getElements() const;
     StateVectors getStateVectors() const;
 
+    double getVelocity() const;
+    double getRadius() const;
+    double getVelocity(double nu) const;
+    double getRadius(double nu) const;
+
     bool isCircular() const;
     bool isOpen() const;
     bool isEquatorial() const;

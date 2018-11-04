@@ -1,6 +1,7 @@
 #include <emscripten/bind.h>
 #include "Orbit.hpp"
 #include "orbitutil.hpp"
+#include "constants.hpp"
 
 Orbit::Orbit():
     m_orbitalElementsGenerator{new OrbitalElementsGenerator()},
@@ -35,6 +36,42 @@ OrbitalElements Orbit::getElements() const
 StateVectors Orbit::getStateVectors() const
 {
     return m_stateVectors;
+}
+
+double Orbit::getRadius() const
+{
+    return getRadius(m_elements.nu);
+}
+
+double Orbit::getVelocity() const
+{
+    return getVelocity(m_elements.nu);
+}
+
+double Orbit::getRadius(double nu) const
+{
+    if (isCircular()) {
+        return m_stateVectors.position.getMagnitude();
+    }
+
+    StateVectorGenerator stateVectorGenerator{};
+    OrbitalElements elements = m_elements;
+
+    elements.nu = nu;
+    return stateVectorGenerator.generateFromOrbitalElements(elements).position.getMagnitude();
+}
+
+double Orbit::getVelocity(double nu) const
+{
+    if (isCircular()) {
+        return m_stateVectors.velocity.getMagnitude();
+    }
+
+    StateVectorGenerator stateVectorGenerator{};
+    OrbitalElements elements = m_elements;
+
+    elements.nu = nu;
+    return stateVectorGenerator.generateFromOrbitalElements(elements).velocity.getMagnitude();
 }
 
 bool Orbit::isCircular() const

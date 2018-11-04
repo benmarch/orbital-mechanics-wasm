@@ -3,9 +3,9 @@ import OrbitRepository from '../OrbitRepository.js';
 import {fixRoundingError} from '../utils.js';
 
 import './OrbitSelector.js';
-import './SaveOrbitButton.js';
+import './AdjustableInput.js';
 
-class HohmannTransfer extends Component {
+class PlaneChange extends Component {
     static get template() {
         return html`
             <style>
@@ -35,20 +35,12 @@ class HohmannTransfer extends Component {
             <div id="selectedOrbits"></div>
 
             <dl id="dataContainer">
-                <dt>∆V<sub>1</sub> =</dt>
-                <dd id="deltaV1">&nbsp;</dd>
-
-                <dt>∆V<sub>2</sub> =</dt>
-                <dd id="deltaV2">&nbsp;</dd>
+                <dt>∆Theta:</dt>
+                <dd><adjustable-input id="deltaTheta" type="range" min="-360" max="360" value="0" on:input="handleThetaChange"></adjustable-input></dd>
 
                 <dt>∆V<sub>Total</sub> =</dt>
                 <dd id="deltaVTotal">&nbsp;</dd>
-
-                <dt>Time Of Flight =</dt>
-                <dd id="timeOfFlight">&nbsp;</dd>
             </dl>
-
-            <save-orbit-button id="saveTransferOrbit">Save Transfer Orbit</save-orbit-button>
         `;
     }
 
@@ -67,27 +59,21 @@ class HohmannTransfer extends Component {
         }
     }
 
-    setOrbits(orbitFrom, orbitTo) {
-        this.errorMessageElement.innerText = '';
-        let transfer;
-
-        try {
-            transfer = new Module.HohmannTransfer(orbitFrom, orbitTo);
-        } catch (e) {
-            console.log(e)
-            this.errorMessageElement.innerText = 'Both orbits must be circular to perform a Hohmann transfer.';
-            return;
+    handleThetaChange() {
+        if (this.planeChange) {
+            this.planeChange.setPlaneChangeAngle(Number(this.deltaThetaElement.value) * Math.PI / 180);
+            this.render();
         }
+    }
 
-        this.deltaV1Element.innerHTML = fixRoundingError(transfer.deltaV1) + ' km/s';
-        this.deltaV2Element.innerHTML = fixRoundingError(transfer.deltaV2) + ' km/s';
-        this.deltaVTotalElement.innerHTML = fixRoundingError(transfer.deltaVTotal) + ' km/s'
-        this.timeOfFlightElement.innerHTML = fixRoundingError(transfer.timeOfFlight) + 's';
+    setOrbits(orbitFrom, orbitTo) {
+        this.planeChange = new Module.PlaneChange(orbitFrom, orbitTo);
+        this.handleThetaChange();
+    }
 
-        this.saveTransferOrbitElement.setOrbit(transfer.transferOrbit);
-
-        transfer._free();
+    render() {
+        this.deltaVTotalElement.innerHTML = fixRoundingError(this.planeChange.deltaV) + ' km/s';
     }
 }
 
-window.customElements.define('hohmann-transfer', HohmannTransfer);
+window.customElements.define('plane-change', PlaneChange);

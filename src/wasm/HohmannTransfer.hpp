@@ -11,6 +11,7 @@ public:
     double getDeltaV2() const;
     double getDeltaVTotal() const;
     double getTimeOfFlight() const;
+    Orbit getTransferOrbit() const;
 
 private:
     void calculateSemimajorAxisOfTransferOrbit();

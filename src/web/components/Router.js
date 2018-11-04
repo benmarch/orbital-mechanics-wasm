@@ -3,11 +3,13 @@ import './MainMenu.js';
 import './MyOrbits.js';
 import './HohmannTransfer.js';
 import './CreateOrbit.js';
+import './PlaneChange.js';
 
 const routes = {
     'myorbits': 'my-orbits',
     'createorbit/?(?<name>[^/]*)': 'create-orbit',
     'hohmanntransfer': 'hohmann-transfer',
+    'planechange': 'plane-change',
     '': 'main-menu',
 }
 
