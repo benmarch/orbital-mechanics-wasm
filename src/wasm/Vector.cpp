@@ -109,6 +109,12 @@ Vector Vector::normalize()
     return *this * (1/mag);
 }
 
+double Vector::angleBetween(const Vector &vec2)
+{
+    double magnitude = mag * vec2.getMagnitude();
+    return acos(dot(vec2) / magnitude);
+}
+
 EMSCRIPTEN_BINDINGS(vector_bindings) {
         emscripten::value_array<Vector>("Vector")
                 .element(&Vector::getX, &Vector::setX)

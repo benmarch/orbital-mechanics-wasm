@@ -12,6 +12,7 @@ public:
     double dot(const Vector &vec2);
     Vector cross(const Vector &vec2);
     Vector normalize();
+    double angleBetween(const Vector &vec2);
 
     Vector operator*(double scale);
     Vector operator+(const Vector &vec2);

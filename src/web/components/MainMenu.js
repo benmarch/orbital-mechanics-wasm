@@ -39,7 +39,7 @@ class MainMenu extends Component {
                     <li><a href="#createorbit">Create an Orbit</a></li>
                     <li><a href="#hohmanntransfer">Calculate Hohmann Transfer</a></li>
                     <li><a href="#planechange">Calculate Plane Change</a></li>
-                    <li>Calculate Bi-elliptic Transfer</li>
+                    <li><a href="#coplanarrendezvous">Calculate Coplanar Rendezvous</a></li>
                     <li>Patched Conic Approximation</li>
                 </ul>
             </nav>
