@@ -86,7 +86,7 @@ class HohmannTransfer extends Component {
 
         this.saveTransferOrbitElement.setOrbit(transfer.transferOrbit);
 
-        transfer._free();
+        Module._free(transfer);
     }
 }
 

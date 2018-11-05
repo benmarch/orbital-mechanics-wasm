@@ -24,24 +24,24 @@ void HohmannTransfer::calculateSemimajorAxisOfTransferOrbit()
 
 void HohmannTransfer::calculateEnergyOfTransferOrbit()
 {
-    m_eps_t = -1 * MU / (2 * m_a_t);
+    m_eps_t = -1 * m_orbitFrom.getMu() / (2 * m_a_t);
 }
 
 void HohmannTransfer::calculateTimeOfFlight()
 {
-    m_TOF = M_PI * sqrt(pow(m_a_t, 3) / MU);
+    m_TOF = M_PI * sqrt(pow(m_a_t, 3) / m_orbitFrom.getMu());
 }
 
 void HohmannTransfer::calculateDeltaV1()
 {
-    double transferVelocityAtOrbitFrom = sqrt(2* (MU/m_orbitFrom.getRadius() + m_eps_t));
+    double transferVelocityAtOrbitFrom = sqrt(2* (m_orbitFrom.getMu()/m_orbitFrom.getRadius() + m_eps_t));
 
     m_deltaV1 = abs(transferVelocityAtOrbitFrom - m_orbitFrom.getVelocity());
 }
 
 void HohmannTransfer::calculateDeltaV2()
 {
-    double transferVelocityAtOrbitTo = sqrt(2* (MU/m_orbitTo.getRadius() + m_eps_t));
+    double transferVelocityAtOrbitTo = sqrt(2* (m_orbitFrom.getMu()/m_orbitTo.getRadius() + m_eps_t));
 
     m_deltaV2 = abs(transferVelocityAtOrbitTo - m_orbitTo.getVelocity());
 }

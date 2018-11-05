@@ -83,7 +83,7 @@ class CoorbitalRendezvous extends Component {
         this.phaseAngleElement.innerHTML = fixRoundingError(rendezvous.phaseAngle) + ' rad';
         this.semimajorAxisElement.innerHTML = fixRoundingError(rendezvous.phasingOrbit.elements.a) + ' km';
 
-        rendezvous._free && rendezvous._free();
+        Module._free(rendezvous);
     }
 }
 

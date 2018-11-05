@@ -2,9 +2,20 @@
 #include <emscripten/bind.h>
 #include <iostream>
 
-#include "StateVectorGenerator.h"
+#include "StateVectorGenerator.hpp"
 #include "mutil.hpp"
 #include "orbitutil.hpp"
+
+StateVectorGenerator::StateVectorGenerator(): StateVectorGenerator(EARTH.getMu())
+{
+
+}
+
+StateVectorGenerator::StateVectorGenerator(double mu):
+    m_mu{mu}
+{
+
+}
 
 StateVectors StateVectorGenerator::generateFromOrbitalElements(OrbitalElements elements)
 {
@@ -76,7 +87,7 @@ void StateVectorGenerator::calculatePosition()
 
 void StateVectorGenerator::calculateVelocity()
 {
-    double speed = sqrt(MU/(m_elements.a * (1 - pow(m_elements.e.getMagnitude(), 2))));
+    double speed = sqrt(m_mu/(m_elements.a * (1 - pow(m_elements.e.getMagnitude(), 2))));
     Vector velocityPQW = Vector { speed * sin(m_elements.nu) * -1, speed * (m_elements.e.getMagnitude() + cos(m_elements.nu)), 0 };
 
     m_state_vectors.velocity = rotateToIJK(velocityPQW);

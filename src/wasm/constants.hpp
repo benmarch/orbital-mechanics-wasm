@@ -2,9 +2,12 @@
 #define ORBITAL_MECHANICS_CONSTANTS_H
 
 #include "Vector.hpp"
+#include "CelestialBody.hpp"
 
-const double MU = 398600;
 const double PRECISION = 0.00000000001;
+
+const CelestialBody EARTH = CelestialBody{5.9737e24, 6378.137, 398600};
+const CelestialBody SUN = CelestialBody{1.9891e30, 695508, 132712400000};
 
 typedef struct {
     double eps; // total mechanical energy

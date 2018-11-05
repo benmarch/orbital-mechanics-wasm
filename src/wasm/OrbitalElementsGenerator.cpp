@@ -8,12 +8,44 @@
 
 using namespace std;
 
+OrbitalElementsGenerator::OrbitalElementsGenerator(): OrbitalElementsGenerator(EARTH.getMu())
+{
+    
+}
+
+OrbitalElementsGenerator::OrbitalElementsGenerator(double mu):
+    m_mu{mu}
+{
+    
+}
+
+OrbitalElements OrbitalElementsGenerator::generateFromStateVectors(Vector &position, Vector &velocity)
+{
+    m_radius = position;
+    m_velocity = velocity;
+
+    calculateTotalMechanicalEnergy();
+    calculateSemimajorAxis();
+    calculateEccentricityVector();
+    calculateAngularMomentum();
+    calculateInclination();
+    calculateNodalVector();
+    calculateArgumentOfPerigee();
+    calculateRightAscensionOfTheAscendingNode();
+    calculateTrueAnomaly();
+    calculateArgumentOfLatitude();
+    calculateLongitudeOfPerigee();
+    calculateTrueLongitude();
+
+    return m_elements;
+}
+
 /**
  * Calculates epsilon (specific mechanical energy)
  */
 void OrbitalElementsGenerator::calculateTotalMechanicalEnergy()
 {
-    m_elements.eps = pow(m_velocity.getMagnitude(), 2)/2 - MU/m_radius.getMagnitude();
+    m_elements.eps = pow(m_velocity.getMagnitude(), 2)/2 - m_mu/m_radius.getMagnitude();
 }
 
 /**
@@ -21,13 +53,13 @@ void OrbitalElementsGenerator::calculateTotalMechanicalEnergy()
  */
 void OrbitalElementsGenerator::calculateSemimajorAxis()
 {
-    m_elements.a = -1*MU/2/m_elements.eps;
+    m_elements.a = -1*m_mu/2/m_elements.eps;
 }
 
 void OrbitalElementsGenerator::calculateEccentricityVector()
 {
-    Vector scaledPosition = m_radius * ((1 / MU) * (pow(m_velocity.getMagnitude(), 2) - MU / m_radius.getMagnitude()));
-    Vector scaledVelocity = m_velocity * ((1 / MU) * m_radius.dot(m_velocity));
+    Vector scaledPosition = m_radius * ((1 / m_mu) * (pow(m_velocity.getMagnitude(), 2) - m_mu / m_radius.getMagnitude()));
+    Vector scaledVelocity = m_velocity * ((1 / m_mu) * m_radius.dot(m_velocity));
 
     m_elements.e = scaledPosition - scaledVelocity;
 }
@@ -189,25 +221,4 @@ void OrbitalElementsGenerator::calculateTrueLongitude()
     } else {
         m_elements.l = M_PI;
     }
-}
-
-OrbitalElements OrbitalElementsGenerator::generateFromStateVectors(Vector &position, Vector &velocity)
-{
-    m_radius = position;
-    m_velocity = velocity;
-
-    calculateTotalMechanicalEnergy();
-    calculateSemimajorAxis();
-    calculateEccentricityVector();
-    calculateAngularMomentum();
-    calculateInclination();
-    calculateNodalVector();
-    calculateArgumentOfPerigee();
-    calculateRightAscensionOfTheAscendingNode();
-    calculateTrueAnomaly();
-    calculateArgumentOfLatitude();
-    calculateLongitudeOfPerigee();
-    calculateTrueLongitude();
-
-    return m_elements;
 }

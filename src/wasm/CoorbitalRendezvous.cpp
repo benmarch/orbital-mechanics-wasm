@@ -44,7 +44,7 @@ void CoorbitalRendezvous::calculateTravelPhaseAngle()
 
 void CoorbitalRendezvous::calculateTargetAngularVelocity()
 {
-    m_tgtAngularV = sqrt(MU / pow(m_orbitTo.getElements().a, 3));
+    m_tgtAngularV = sqrt(m_orbitFrom.getMu() / pow(m_orbitTo.getElements().a, 3));
 }
 
 void CoorbitalRendezvous::calculateTOF()
@@ -56,7 +56,7 @@ void CoorbitalRendezvous::calculatePhasingOrbit()
 {
     OrbitalElements elements = m_orbitFrom.getElements();
 
-    double a_phase = cbrt(MU * pow(m_tof / (2 * M_PI), 2));
+    double a_phase = cbrt(m_orbitFrom.getMu() * pow(m_tof / (2 * M_PI), 2));
 
     bool isPerigee = m_initialPhaseAngle >= M_PI;
     short adder = isPerigee ? -1 : 1;

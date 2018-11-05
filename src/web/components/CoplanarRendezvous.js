@@ -91,7 +91,7 @@ class CoplanarRendezvous extends Component {
         this.phaseAngleElement.innerHTML = fixRoundingError(rendezvous.phaseAngle) + ' rad';
         this.waitTimeElement.innerHTML = fixRoundingError(rendezvous.waitTime) + ' s';
 
-        rendezvous._free && rendezvous._free();
+        Module._free(rendezvous);
     }
 }
 

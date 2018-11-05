@@ -8,9 +8,13 @@
 class StateVectorGenerator
 {
 public:
+    StateVectorGenerator();
+    StateVectorGenerator(double mu);
+
     StateVectors generateFromOrbitalElements(OrbitalElements elements);
 
 private:
+    double m_mu;
     StateVectors m_state_vectors;
     OrbitalElements m_elements;
     RotationMatrix m_rotation_matrix;

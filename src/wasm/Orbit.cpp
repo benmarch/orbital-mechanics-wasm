@@ -3,9 +3,20 @@
 #include "orbitutil.hpp"
 #include "constants.hpp"
 
-Orbit::Orbit():
+Orbit::Orbit(): Orbit(EARTH)
+{
+
+}
+
+Orbit::Orbit(CelestialBody orbitingBody): Orbit(orbitingBody.getMu())
+{
+
+}
+
+Orbit::Orbit(double mu):
     m_orbitalElementsGenerator{new OrbitalElementsGenerator()},
-    m_stateVectorGenerator{new StateVectorGenerator()}
+    m_stateVectorGenerator{new StateVectorGenerator()},
+    m_mu{mu}
 {
 
 }
@@ -87,6 +98,11 @@ bool Orbit::isOpen() const
 bool Orbit::isEquatorial() const
 {
     return isEquatorialOrbit(m_elements);
+}
+
+double Orbit::getMu() const
+{
+    return m_mu;
 }
 
 EMSCRIPTEN_BINDINGS(orbit_bindings) {

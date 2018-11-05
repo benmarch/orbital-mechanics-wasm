@@ -3,13 +3,16 @@
 
 #include "Vector.hpp"
 #include "constants.hpp"
+#include "CelestialBody.hpp"
 #include "OrbitalElementsGenerator.hpp"
-#include "StateVectorGenerator.h"
+#include "StateVectorGenerator.hpp"
 
 class Orbit
 {
 public:
     Orbit();
+    Orbit(CelestialBody orbitingBody);
+    Orbit(double mu);
     ~Orbit();
 
     void updateFromOrbitalElements(OrbitalElements elements);
@@ -26,11 +29,14 @@ public:
     bool isOpen() const;
     bool isEquatorial() const;
 
+    double getMu() const;
+
 private:
     OrbitalElementsGenerator *m_orbitalElementsGenerator;
     StateVectorGenerator *m_stateVectorGenerator;
     OrbitalElements m_elements;
     StateVectors m_stateVectors;
+    double m_mu;
 };
 
 

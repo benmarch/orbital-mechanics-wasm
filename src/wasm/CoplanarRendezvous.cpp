@@ -28,7 +28,7 @@ CoplanarRendezvous::CoplanarRendezvous(Orbit &orbitFrom, Orbit &orbitTo):
 double CoplanarRendezvous::calculateAngularVelocity(Orbit orbit)
 {
     // assuming circular orbits for now
-    return sqrt(MU / pow(orbit.getElements().a, 3));
+    return sqrt(orbit.getMu() / pow(orbit.getElements().a, 3));
 }
 
 void CoplanarRendezvous::calculateTransferOrbit()
@@ -39,7 +39,7 @@ void CoplanarRendezvous::calculateTransferOrbit()
 
 void CoplanarRendezvous::calculateTOF()
 {
-    m_TOF = M_PI * sqrt(pow(m_a_t, 3) / MU);
+    m_TOF = M_PI * sqrt(pow(m_a_t, 3) / m_orbitFrom.getMu());
 }
 
 void CoplanarRendezvous::calculateInterceptorAngularVelocity()
