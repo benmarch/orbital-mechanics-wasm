@@ -40,6 +40,7 @@ class MainMenu extends Component {
                     <li><a href="#hohmanntransfer">Calculate Hohmann Transfer</a></li>
                     <li><a href="#planechange">Calculate Plane Change</a></li>
                     <li><a href="#coplanarrendezvous">Calculate Coplanar Rendezvous</a></li>
+                    <li><a href="#coorbitalrendezvous">Calculate Coorbital Rendezvous</a></li>
                     <li>Patched Conic Approximation</li>
                 </ul>
             </nav>

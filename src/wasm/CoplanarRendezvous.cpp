@@ -10,11 +10,9 @@ CoplanarRendezvous::CoplanarRendezvous(Orbit &orbitFrom, Orbit &orbitTo):
 {
     // ensure the orbits are coplanar
     if (
-        !withinPrecision(orbitFrom.getElements().i,  orbitTo.getElements().i) &&
-        !withinPrecision(orbitFrom.getElements().Om, orbitTo.getElements().Om)
+        withinPrecision(orbitFrom.getElements().i,  orbitTo.getElements().i) &&
+        withinPrecision(orbitFrom.getElements().Om, orbitTo.getElements().Om)
     ) {
-        std::cerr << "Orbits are not coplanar!" << std::endl;
-    } else {
         calculateTransferOrbit();
         calculateTOF();
         calculateInterceptorAngularVelocity();
@@ -22,6 +20,8 @@ CoplanarRendezvous::CoplanarRendezvous(Orbit &orbitFrom, Orbit &orbitTo):
         calculateLeadAngle();
         calculatePhaseAngle();
         calculateWaitTime();
+    } else {
+        std::cerr << "Orbits are not coplanar!" << std::endl;
     }
 }
 

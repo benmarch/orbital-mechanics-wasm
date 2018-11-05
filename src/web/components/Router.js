@@ -5,6 +5,7 @@ import './HohmannTransfer.js';
 import './CreateOrbit.js';
 import './PlaneChange.js';
 import './CoplanarRendezvous.js';
+import './CoorbitalRendezvous.js';
 
 const routes = {
     'myorbits': 'my-orbits',
@@ -12,6 +13,7 @@ const routes = {
     'hohmanntransfer': 'hohmann-transfer',
     'planechange': 'plane-change',
     'coplanarrendezvous': 'coplanar-rendezvous',
+    'coorbitalrendezvous': 'coorbital-rendezvous',
     '': 'main-menu',
 }
 
