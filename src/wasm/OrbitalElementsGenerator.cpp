@@ -24,6 +24,19 @@ OrbitalElements OrbitalElementsGenerator::generateFromStateVectors(Vector &posit
     m_radius = position;
     m_velocity = velocity;
 
+    generate();
+
+    return m_elements;
+}
+
+void OrbitalElementsGenerator::setMu(double mu)
+{
+    m_mu = mu;
+    generate();
+}
+
+void OrbitalElementsGenerator::generate()
+{
     calculateTotalMechanicalEnergy();
     calculateSemimajorAxis();
     calculateEccentricityVector();
@@ -36,8 +49,6 @@ OrbitalElements OrbitalElementsGenerator::generateFromStateVectors(Vector &posit
     calculateArgumentOfLatitude();
     calculateLongitudeOfPerigee();
     calculateTrueLongitude();
-
-    return m_elements;
 }
 
 /**

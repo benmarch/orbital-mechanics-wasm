@@ -6,6 +6,7 @@ import './CreateOrbit.js';
 import './PlaneChange.js';
 import './CoplanarRendezvous.js';
 import './CoorbitalRendezvous.js';
+import './PatchedConicApproximation.js';
 
 const routes = {
     'myorbits': 'my-orbits',
@@ -14,6 +15,7 @@ const routes = {
     'planechange': 'plane-change',
     'coplanarrendezvous': 'coplanar-rendezvous',
     'coorbitalrendezvous': 'coorbital-rendezvous',
+    'pca': 'patched-conic-approximation',
     '': 'main-menu',
 }
 

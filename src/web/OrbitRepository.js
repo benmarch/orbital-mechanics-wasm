@@ -15,11 +15,17 @@ export default class OrbitRepository {
     }
 
     saveOrbit(name, orbit) {
+        // make sure we're up-to-date first
+        this.orbits = this.retrieveOrbits();
+
         this.orbits[name] = orbit;
         this.persist();
     }
 
     deleteOrbit(name) {
+        // make sure we're up-to-date first
+        this.orbits = this.retrieveOrbits();
+
         if (this.getOrbitByName(name)) {
             Module._free(this.orbits[name]);
             delete this.orbits[name];
@@ -32,7 +38,7 @@ export default class OrbitRepository {
         const parsedOrbits = JSON.parse(this.storage.getItem(STORAGE_KEY) || '{}');
 
         Object.entries(parsedOrbits).forEach(([name, orbitLike]) => {
-            const orbit = new Module.Orbit();
+            const orbit = new Module.Orbit(orbitLike.mu);
 
             if (orbitLike.stateVectors) {
                 orbit.updateFromStateVectors(orbitLike.stateVectors);
@@ -54,6 +60,7 @@ export default class OrbitRepository {
             orbitsToPersist[name] = {
                 elements: orbit.elements,
                 stateVectors: orbit.stateVectors,
+                mu: orbit.mu,
             };
         });
 

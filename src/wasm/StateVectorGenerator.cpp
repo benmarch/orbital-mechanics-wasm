@@ -34,11 +34,22 @@ StateVectors StateVectorGenerator::generateFromOrbitalElements(OrbitalElements e
         m_elements.nu = m_elements.l;
     }
 
+    generate();
+
+    return m_state_vectors;
+}
+
+void StateVectorGenerator::setMu(double mu)
+{
+    m_mu = mu;
+    generate();
+}
+
+void StateVectorGenerator::generate()
+{
     determineRotationMatrix();
     calculatePosition();
     calculateVelocity();
-
-    return m_state_vectors;
 }
 
 void StateVectorGenerator::determineRotationMatrix()

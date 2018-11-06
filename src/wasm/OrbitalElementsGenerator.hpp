@@ -11,12 +11,15 @@ public:
     OrbitalElementsGenerator(double mu);
 
     OrbitalElements generateFromStateVectors(Vector &position, Vector &velocity);
+    void setMu(double mu);
 
 private:
     OrbitalElements m_elements;
     Vector m_radius;
     Vector m_velocity;
     double m_mu;
+
+    void generate();
 
     void calculateTotalMechanicalEnergy();
     void calculateSemimajorAxis();

@@ -126,7 +126,9 @@ class StateVectorGenerator extends Component {
     }
 
     handleOrbitSaved() {
-        this.orbit = new Module.Orbit();
+        const mu = this.orbit.mu;
+        Module._free(this.orbit);
+        this.orbit = new Module.Orbit(mu);
         this.regenerate();
     }
 
@@ -146,13 +148,18 @@ class StateVectorGenerator extends Component {
         this.regenerate();
     }
 
+    setMu(mu) {
+        this.orbit.setMu(mu);
+        this.regenerate();
+    }
+
     getStateVectors() {
         this.orbit.updateFromOrbitalElements(this.elements);
         return this.orbit.stateVectors;
     }
 
     regenerate() {
-        var stateVectors = this.getStateVectors();
+        const stateVectors = this.getStateVectors();
 
         this.saveOrbitButtonElement.setOrbit(this.orbit);
 

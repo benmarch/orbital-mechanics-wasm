@@ -29,6 +29,11 @@ class PlaneChange extends Component {
             </style>
 
 
+            <h3>Please select 2 orbits in this order: </h3>
+            <ol>
+                <li>Initial Orbit</li>
+                <li>Final Orbit</li>
+            </ol>
             <div id="errorMessage"></div>
             <orbit-selector max-orbits="2" on:orbitselected="handleOrbitSelected"></orbit-selector>
 
@@ -45,17 +50,17 @@ class PlaneChange extends Component {
     }
 
     renderSelectedOrbits(selectedOrbits) {
-        const orbitFromName = selectedOrbits[0] ? selectedOrbits[0].name : '&lt;Select an Orbit&gt;'
-        const orbitToName = selectedOrbits[1] ? selectedOrbits[1].name : '&lt;Select an Orbit&gt;'
+        const orbitFromName = selectedOrbits[0] ? selectedOrbits[0].name : '&lt;Select an Orbit&gt;';
+        const orbitToName = selectedOrbits[1] ? selectedOrbits[1].name : '&lt;Select an Orbit&gt;';
 
-        this.selectedOrbitsElement.innerHTML = `From: ${orbitFromName}, To: ${orbitToName}`;
+        this.selectedOrbitsElement.innerHTML = `Initial: ${orbitFromName}, Final: ${orbitToName}`;
     }
 
     handleOrbitSelected({detail: selectedOrbits}) {
         this.renderSelectedOrbits(selectedOrbits);
 
         if (selectedOrbits.length === 2) {
-            this.setOrbits(selectedOrbits[0].orbit, selectedOrbits[1].orbit)
+            this.setOrbits(selectedOrbits[0].orbit, selectedOrbits[1].orbit);
         }
     }
 

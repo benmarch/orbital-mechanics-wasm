@@ -39,6 +39,13 @@ export default class CreateOrbit extends Component {
                 <orbital-elements-generator id="orbitalElementsGenerator" on:input="handleOrbitalElementsInput"></orbital-elements-generator>
 
                 <div id="copyActions">
+                    <span>Orbiting Body:</span>
+                    <select id="orbitingBodyMu" on:change="handleOrbitingBodyChange">
+                        <option value="132712400000">Sun</option>
+                        <option value="398600" selected>Earth</option>
+                        <option value="325700">Venus</option>
+                    </select>
+
                     <om-button part="button" id="transferStateVectorsButton" on:click="transferStateVectors">
                         Copy State Vectors &rightarrow;
                     </om-button>
@@ -76,6 +83,12 @@ export default class CreateOrbit extends Component {
                 this.orbitalElementsGeneratorElement.updateWithStateVectors(orbitToLoad.stateVectors);
             }
         }
+    }
+
+    handleOrbitingBodyChange() {
+        const mu = Number(this.orbitingBodyMuElement.value);
+        this.stateVectorGeneratorElement.setMu(mu);
+        this.orbitalElementsGeneratorElement.setMu(mu);
     }
 
     handleStateVectorInput() {

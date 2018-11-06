@@ -5,15 +5,15 @@
 class CelestialBody
 {
 public:
-    CelestialBody(double mass, double radius, double mu);
+    CelestialBody(double mass, double orbitalRadius, double mu);
 
     double getMass() const;
-    double getRadius() const;
+    double getOrbitalRadius() const;
     double getMu() const;
 
 private:
     double m_mass;
-    double m_radius;
+    double m_orbitalRadius;
     double m_mu;
 };
 

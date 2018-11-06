@@ -41,7 +41,7 @@ class MainMenu extends Component {
                     <li><a href="#planechange">Calculate Plane Change</a></li>
                     <li><a href="#coplanarrendezvous">Calculate Coplanar Rendezvous</a></li>
                     <li><a href="#coorbitalrendezvous">Calculate Coorbital Rendezvous</a></li>
-                    <li>Patched Conic Approximation</li>
+                    <li><a href="#pca">Patched Conic Approximation</a></li>
                 </ul>
             </nav>
         `;

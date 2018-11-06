@@ -68,7 +68,7 @@ double HohmannTransfer::getTimeOfFlight() const
 
 Orbit HohmannTransfer::getTransferOrbit() const
 {
-    Orbit transferOrbit = Orbit{};
+    Orbit transferOrbit = Orbit{m_orbitFrom.getMu()};
     Orbit innerOrbit = m_orbitFrom.getRadius() < m_orbitTo.getRadius() ? m_orbitFrom : m_orbitTo;
 
     OrbitalElements elements = innerOrbit.getElements();
@@ -77,6 +77,8 @@ Orbit HohmannTransfer::getTransferOrbit() const
     elements.e = Vector{-1 * (innerOrbit.getRadius() / m_a_t - 1), 0, 0};
 
     transferOrbit.updateFromOrbitalElements(elements);
+    StateVectors stateVectors = transferOrbit.getStateVectors();
+    transferOrbit.updateFromStateVectors(stateVectors);
 
     return transferOrbit;
 }

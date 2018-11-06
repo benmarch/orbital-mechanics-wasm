@@ -30,6 +30,7 @@ public:
     bool isEquatorial() const;
 
     double getMu() const;
+    void setMu(double mu);
 
 private:
     OrbitalElementsGenerator *m_orbitalElementsGenerator;

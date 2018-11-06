@@ -1,7 +1,7 @@
 #include "CelestialBody.hpp"
 
-CelestialBody::CelestialBody(double mass, double radius, double mu):
-    m_mass{mass}, m_radius{radius}, m_mu{mu}
+CelestialBody::CelestialBody(double mass, double orbitalRadius, double mu):
+    m_mass{mass}, m_orbitalRadius{orbitalRadius}, m_mu{mu}
 {
 
 }
@@ -11,9 +11,9 @@ double CelestialBody::getMass() const
     return m_mass;
 }
 
-double CelestialBody::getRadius() const
+double CelestialBody::getOrbitalRadius() const
 {
-    return m_radius;
+    return m_orbitalRadius;
 }
 
 double CelestialBody::getMu() const

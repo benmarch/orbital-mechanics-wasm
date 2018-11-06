@@ -108,6 +108,11 @@ export default class OrbitalElementsGenerator extends Component {
         this.regenerate();
     }
 
+    setMu(mu) {
+        this.orbit.setMu(mu);
+        this.regenerate();
+    }
+
     getElements() {
         return this.orbit.elements;
     }
@@ -130,7 +135,7 @@ export default class OrbitalElementsGenerator extends Component {
         this.orbit.updateFromStateVectors(this.stateVectors);
 
         this.value = this.orbit.elements;
-        var elements = this.getDisplayValues(this.value);
+        const elements = this.getDisplayValues(this.value);
 
         this.saveOrbitButtonElement.setOrbit(this.orbit);
 
