@@ -7,6 +7,7 @@ import './PlaneChange.js';
 import './CoplanarRendezvous.js';
 import './CoorbitalRendezvous.js';
 import './PatchedConicApproximation.js';
+import './TimeOfFlightCalculator.js';
 
 const routes = {
     'myorbits': 'my-orbits',
@@ -16,6 +17,7 @@ const routes = {
     'coplanarrendezvous': 'coplanar-rendezvous',
     'coorbitalrendezvous': 'coorbital-rendezvous',
     'pca': 'patched-conic-approximation',
+    'tof': 'time-of-flight-calculator',
     '': 'main-menu',
 }
 

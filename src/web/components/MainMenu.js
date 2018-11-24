@@ -42,6 +42,7 @@ class MainMenu extends Component {
                     <li><a href="#coplanarrendezvous">Calculate Coplanar Rendezvous</a></li>
                     <li><a href="#coorbitalrendezvous">Calculate Coorbital Rendezvous</a></li>
                     <li><a href="#pca">Patched Conic Approximation</a></li>
+                    <li><a href="#tof">Calculate Time of Flight</a></li>
                 </ul>
             </nav>
         `;
