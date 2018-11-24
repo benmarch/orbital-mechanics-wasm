@@ -1,16 +1,17 @@
 import Component, {html} from '../Component.js';
 
-class Button extends Component {
+class Checkbox extends Component {
     static get template() {
         return html`
             <style>
-                #button {
+                #checkbox {
                     -webkit-appearance: none;
                     display: inline-block;
                     padding: 10px;
                     background-color: #fff;
                     border: var(--input-border);
                     cursor: pointer;
+                    position: relative;
 
                     color: var(--text-color);
                     font-family: var(--font-family);
@@ -20,16 +21,26 @@ class Button extends Component {
                     line-height: var(--line-height);
                 }
 
-                #button:hover {
-                    background-color: #eee;
+                #checkbox:checked::after {
+                    content: "✔";
+                    position: absolute;
+                    top: 3px;
+                    left: 3px;
+                    line-height: 1;
                 }
             </style>
 
-            <button id="button">
-                <slot></slot>
-            </button>
+            <input type="checkbox" id="checkbox" on:change="handleChange">
         `;
+    }
+
+    get checked() {
+        return this.checkboxElement.checked;
+    }
+
+    handleChange() {
+        this.dispatchEvent(new Event('change', {detail: {checked: this.checked}}));
     }
 }
 
-window.customElements.define('om-button', Button);
+window.customElements.define('om-checkbox', Checkbox);

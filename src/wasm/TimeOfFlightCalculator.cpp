@@ -10,57 +10,80 @@ TimeOfFlightCalculator::TimeOfFlightCalculator(Orbit &orbit):
 
 }
 
-TimeOfFlightElements TimeOfFlightCalculator::calculateTimeOfFlight(const double initialTrueAnomaly, const double finalTrueAnomaly)
+double TimeOfFlightCalculator::calculateTimeOfFlight(const double initialTrueAnomaly, const double finalTrueAnomaly)
 {
-    TimeOfFlightElements timeOfFlightElements = {
-        .initialTrueAnomaly = initialTrueAnomaly,
-        .finalTrueAnomaly = finalTrueAnomaly,
-        .meanMotion = calculateMeanMotion()
-    };
+    m_initialTrueAnomaly = initialTrueAnomaly;
+    m_finalTrueAnomaly = finalTrueAnomaly;
+    m_meanMotion = calculateMeanMotion();
+    m_initialEccentricAnomaly = calculateEccentricAnomalyFromTrueAnomaly(initialTrueAnomaly);
+    m_initialMeanAnomaly = calculateMeanAnomalyFromEccentricAnomaly(m_initialEccentricAnomaly);
+    m_finalEccentricAnomaly = calculateEccentricAnomalyFromTrueAnomaly(finalTrueAnomaly);
+    m_finalMeanAnomaly = calculateMeanAnomalyFromEccentricAnomaly(m_finalEccentricAnomaly);
+    m_timeOfFlight = solveForTimeOfFlight();
 
-    timeOfFlightElements.initialEccentricAnomaly = calculateEccentricAnomalyFromTrueAnomaly(initialTrueAnomaly);
-    timeOfFlightElements.initialMeanAnomaly = calculateMeanAnomalyFromEccentricAnomaly(timeOfFlightElements.initialEccentricAnomaly);
-    timeOfFlightElements.finalEccentricAnomaly = calculateEccentricAnomalyFromTrueAnomaly(finalTrueAnomaly);
-    timeOfFlightElements.finalMeanAnomaly = calculateMeanAnomalyFromEccentricAnomaly(timeOfFlightElements.finalEccentricAnomaly);
-    timeOfFlightElements.timeOfFlight = solveForTimeOfFlight(timeOfFlightElements);
-
-    return timeOfFlightElements;
+    return m_timeOfFlight;
 }
 
-TimeOfFlightElements TimeOfFlightCalculator::calculateFinalTrueAnomaly(const double initialTrueAnomaly,
-                                                                       const double timeOfFlight)
+double TimeOfFlightCalculator::calculateFinalTrueAnomaly(const double initialTrueAnomaly, const double timeOfFlight)
 {
-    TimeOfFlightElements timeOfFlightElements = {
-        .initialTrueAnomaly = initialTrueAnomaly,
-        .timeOfFlight = timeOfFlight,
-        .meanMotion = calculateMeanMotion()
-    };
+    m_initialTrueAnomaly = initialTrueAnomaly;
+    m_timeOfFlight = timeOfFlight;
+    m_meanMotion = calculateMeanMotion();
+    m_initialEccentricAnomaly = calculateEccentricAnomalyFromTrueAnomaly(initialTrueAnomaly);
+    m_initialMeanAnomaly = calculateMeanAnomalyFromEccentricAnomaly(m_initialEccentricAnomaly);
+    m_finalMeanAnomaly = solveForFinalMeanAnomaly();
+    m_finalEccentricAnomaly = calculateEccentricAnomalyFromMeanAnomaly(m_finalMeanAnomaly);
+    m_finalTrueAnomaly = calculateTrueAnomalyFromEccentricAnomaly(m_finalEccentricAnomaly);
 
-    timeOfFlightElements.initialEccentricAnomaly = calculateEccentricAnomalyFromTrueAnomaly(initialTrueAnomaly);
-    timeOfFlightElements.initialMeanAnomaly = calculateMeanAnomalyFromEccentricAnomaly(timeOfFlightElements.initialEccentricAnomaly);
-    timeOfFlightElements.finalMeanAnomaly = solveForFinalMeanAnomaly(timeOfFlightElements);
-    timeOfFlightElements.finalEccentricAnomaly = calculateEccentricAnomalyFromMeanAnomaly(timeOfFlightElements.finalMeanAnomaly);
-    timeOfFlightElements.finalTrueAnomaly = calculateTrueAnomalyFromEccentricAnomaly(timeOfFlightElements.finalEccentricAnomaly);
-
-    return timeOfFlightElements;
+    return m_finalTrueAnomaly;
 }
 
-TimeOfFlightElements TimeOfFlightCalculator::calculateInitialTrueAnomaly(const double finalTrueAnomaly,
-                                                                         const double timeOfFlight)
+double TimeOfFlightCalculator::calculateInitialTrueAnomaly(const double finalTrueAnomaly, const double timeOfFlight)
 {
-    TimeOfFlightElements timeOfFlightElements = {
-        .finalTrueAnomaly = finalTrueAnomaly,
-        .timeOfFlight = timeOfFlight,
-        .meanMotion = calculateMeanMotion()
-    };
 
-    timeOfFlightElements.finalEccentricAnomaly = calculateEccentricAnomalyFromTrueAnomaly(finalTrueAnomaly);
-    timeOfFlightElements.finalMeanAnomaly = calculateMeanAnomalyFromEccentricAnomaly(timeOfFlightElements.finalEccentricAnomaly);
-    timeOfFlightElements.initialMeanAnomaly = solveForInitialMeanAnomaly(timeOfFlightElements);
-    timeOfFlightElements.initialEccentricAnomaly = calculateEccentricAnomalyFromMeanAnomaly(timeOfFlightElements.initialMeanAnomaly);
-    timeOfFlightElements.initialTrueAnomaly = calculateTrueAnomalyFromEccentricAnomaly(timeOfFlightElements.initialEccentricAnomaly);
+    m_finalTrueAnomaly = finalTrueAnomaly;
+    m_timeOfFlight = timeOfFlight;
+    m_meanMotion = calculateMeanMotion();
+    m_finalEccentricAnomaly = calculateEccentricAnomalyFromTrueAnomaly(finalTrueAnomaly);
+    m_finalMeanAnomaly = calculateMeanAnomalyFromEccentricAnomaly(m_finalEccentricAnomaly);
+    m_initialMeanAnomaly = solveForInitialMeanAnomaly();
+    m_initialEccentricAnomaly = calculateEccentricAnomalyFromMeanAnomaly(m_initialMeanAnomaly);
+    m_initialTrueAnomaly = calculateTrueAnomalyFromEccentricAnomaly(m_initialEccentricAnomaly);
 
-    return timeOfFlightElements;
+    return m_initialTrueAnomaly;
+}
+
+double TimeOfFlightCalculator::getMeanMotion() const
+{
+    return m_meanMotion;
+}
+
+double TimeOfFlightCalculator::getInitialEccentricAnomaly() const{
+    return m_initialEccentricAnomaly;
+}
+
+double TimeOfFlightCalculator::getFinalEccentricAnomaly() const{
+    return m_finalEccentricAnomaly;
+}
+
+double TimeOfFlightCalculator::getInitialMeanAnomaly() const{
+    return m_initialMeanAnomaly;
+}
+
+double TimeOfFlightCalculator::getFinalMeanAnomaly() const{
+    return m_finalMeanAnomaly;
+}
+
+double TimeOfFlightCalculator::getTimeOfFlight() const{
+    return m_timeOfFlight;
+}
+
+double TimeOfFlightCalculator::getInitialTrueAnomaly() const{
+    return m_initialTrueAnomaly;
+}
+
+double TimeOfFlightCalculator::getFinalTrueAnomaly() const{
+    return m_finalTrueAnomaly;
 }
 
 double TimeOfFlightCalculator::calculateMeanMotion()
@@ -134,9 +157,9 @@ double TimeOfFlightCalculator::calculateTrueAnomalyFromEccentricAnomaly(double e
     return 2 * M_PI - trueAnomaly;
 }
 
-double TimeOfFlightCalculator::solveForTimeOfFlight(const TimeOfFlightElements &timeOfFlightElements)
+double TimeOfFlightCalculator::solveForTimeOfFlight()
 {
-    double timeOfFlight = (timeOfFlightElements.finalMeanAnomaly - timeOfFlightElements.initialMeanAnomaly) / timeOfFlightElements.meanMotion;
+    double timeOfFlight = (m_finalMeanAnomaly - m_initialMeanAnomaly) / m_meanMotion;
 
     /*while (timeOfFlight >= 2 * M_PI) {
         timeOfFlight -= 2 * M_PI;
@@ -145,14 +168,14 @@ double TimeOfFlightCalculator::solveForTimeOfFlight(const TimeOfFlightElements &
     return timeOfFlight;
 }
 
-double TimeOfFlightCalculator::solveForFinalMeanAnomaly(const TimeOfFlightElements &timeOfFlightElements)
+double TimeOfFlightCalculator::solveForFinalMeanAnomaly()
 {
-    return timeOfFlightElements.meanMotion * timeOfFlightElements.timeOfFlight + timeOfFlightElements.initialMeanAnomaly;
+    return m_meanMotion * m_timeOfFlight + m_initialMeanAnomaly;
 }
 
-double TimeOfFlightCalculator::solveForInitialMeanAnomaly(const TimeOfFlightElements &timeOfFlightElements)
+double TimeOfFlightCalculator::solveForInitialMeanAnomaly()
 {
-    return -1 *(timeOfFlightElements.meanMotion * timeOfFlightElements.timeOfFlight - timeOfFlightElements.finalMeanAnomaly);
+    return m_finalMeanAnomaly - m_meanMotion * m_timeOfFlight;
 }
 
 EMSCRIPTEN_BINDINGS(time_of_flight_bindings) {
@@ -162,15 +185,13 @@ EMSCRIPTEN_BINDINGS(time_of_flight_bindings) {
         .constructor<Orbit&>()
         .function("calculateTimeOfFlight", &TimeOfFlightCalculator::calculateTimeOfFlight)
         .function("calculateFinalTrueAnomaly", &TimeOfFlightCalculator::calculateFinalTrueAnomaly)
-        .function("calculateInitialTrueAnomaly", &TimeOfFlightCalculator::calculateInitialTrueAnomaly);
-
-    value_object<TimeOfFlightElements>("TimeOfFlightElements")
-        .field("nu_i", &TimeOfFlightElements::initialTrueAnomaly)
-        .field("nu_f", &TimeOfFlightElements::finalTrueAnomaly)
-        .field("E_i", &TimeOfFlightElements::initialEccentricAnomaly)
-        .field("E_f", &TimeOfFlightElements::finalEccentricAnomaly)
-        .field("M_i", &TimeOfFlightElements::initialMeanAnomaly)
-        .field("M_f", &TimeOfFlightElements::finalMeanAnomaly)
-        .field("tof", &TimeOfFlightElements::timeOfFlight)
-        .field("n", &TimeOfFlightElements::meanMotion);
+        .function("calculateInitialTrueAnomaly", &TimeOfFlightCalculator::calculateInitialTrueAnomaly)
+        .property("initialTrueAnomaly", &TimeOfFlightCalculator::getInitialTrueAnomaly)
+        .property("finalTrueAnomaly", &TimeOfFlightCalculator::getFinalTrueAnomaly)
+        .property("initialEccentricAnomaly", &TimeOfFlightCalculator::getInitialEccentricAnomaly)
+        .property("finalEccentricAnomaly", &TimeOfFlightCalculator::getFinalEccentricAnomaly)
+        .property("initialMeanAnomaly", &TimeOfFlightCalculator::getInitialMeanAnomaly)
+        .property("finalMeanAnomaly", &TimeOfFlightCalculator::getFinalMeanAnomaly)
+        .property("timeOfFlight", &TimeOfFlightCalculator::getTimeOfFlight)
+        .property("meanMotion", &TimeOfFlightCalculator::getMeanMotion);
 }

@@ -4,6 +4,7 @@ import {fixRoundingError} from '../utils.js';
 
 import './OrbitSelector.js';
 import './AdjustableInput.js';
+import './Checkbox.js';
 
 class TimeOfFlightCalculator extends Component {
     static get template() {
@@ -26,6 +27,70 @@ class TimeOfFlightCalculator extends Component {
                 #errorMessage {
                     color: red;
                 }
+
+                .solve-for__timeOfFlight #timeOfFlightInput {
+                    display: none;
+                }
+                .solve-for__timeOfFlight #timeOfFlightValue {
+                    display: block;
+                }
+
+                .solve-for__timeOfFlight #initialTrueAnomalyInput {
+                    display: block;
+                }
+                .solve-for__timeOfFlight #initialTrueAnomalyValue {
+                    display: none;
+                }
+
+                .solve-for__timeOfFlight #finalTrueAnomalyInput {
+                    display: block;
+                }
+                .solve-for__timeOfFlight #finalTrueAnomalyValue {
+                    display: none;
+                }
+
+                .solve-for__finalTrueAnomaly #timeOfFlightInput {
+                    display: block;
+                }
+                .solve-for__finalTrueAnomaly #timeOfFlightValue {
+                    display: none;
+                }
+
+                .solve-for__finalTrueAnomaly #initialTrueAnomalyInput {
+                    display: block;
+                }
+                .solve-for__finalTrueAnomaly #initialTrueAnomalyValue {
+                    display: none;
+                }
+
+                .solve-for__finalTrueAnomaly #finalTrueAnomalyInput {
+                    display: none;
+                }
+                .solve-for__finalTrueAnomaly #finalTrueAnomalyValue {
+                    display: block;
+                }
+
+                .solve-for__initialTrueAnomaly #timeOfFlightInput {
+                    display: block;
+                }
+                .solve-for__initialTrueAnomaly #timeOfFlightValue {
+                    display: none;
+                }
+
+                .solve-for__initialTrueAnomaly #initialTrueAnomalyInput {
+                    display: none;
+                }
+                .solve-for__initialTrueAnomaly #initialTrueAnomalyValue {
+                    display: block;
+                }
+
+                .solve-for__initialTrueAnomaly #finalTrueAnomalyInput {
+                    display: block;
+                }
+                .solve-for__initialTrueAnomaly #finalTrueAnomalyValue {
+                    display: none;
+                }
+
             </style>
 
 
@@ -35,17 +100,54 @@ class TimeOfFlightCalculator extends Component {
 
             <div id="selectedOrbits"></div>
 
-            <dl id="dataContainer">
-                <dt>Initial True Anomaly:</dt>
-                <dd><adjustable-input id="initialTrueAnomaly" type="range" min="0" max="360" value="0" on:input="handleChange"></adjustable-input></dd>
+            <h3>Solve For:</h3>
+            <select id="solveForQuantity" on:change="handleSelect">
+                <option value="timeOfFlight" selected>Time of Flight</option>
+                <option value="finalTrueAnomaly">Final True Anomaly (ν<sub>f</sub>)</option>
+                <option value="initialTrueAnomaly">Initial True Anomaly (ν<sub>i</sub>)</option>
+            </select>
 
-                <dt>Initial True Anomaly:</dt>
-                <dd><adjustable-input id="finalTrueAnomaly" type="range" min="0" max="360" value="0" on:input="handleChange"></adjustable-input></dd>
+            <dl id="dataContainer" class="solve-for__timeOfFlight">
+                <dt>Initial True Anomaly (ν<sub>i</sub>):</dt>
+                <dd>
+                    <span id="initialTrueAnomalyValue">&nbsp;</span>
+                    <adjustable-input id="initialTrueAnomalyInput" type="range" min="0" max="360" value="0" on:input="handleChange"></adjustable-input>
+                </dd>
 
-                <dt>Time of Flight =</dt>
-                <dd id="timeOfFlight">&nbsp;</dd>
+                <dt>Final True Anomaly (ν<sub>f</sub>):</dt>
+                <dd>
+                    <span id="finalTrueAnomalyValue">&nbsp;</span>
+                    <adjustable-input id="finalTrueAnomalyInput" type="range" min="0" max="360" value="0" on:input="handleChange"></adjustable-input>
+                </dd>
+
+                <dt>Time of Flight (TOF):</dt>
+                <dd>
+                    <span id="timeOfFlightValue">&nbsp;</span>
+                    <adjustable-input id="timeOfFlightInput" type="range" min="0" value="0" on:input="handleChange"></adjustable-input>
+                </dd>
+
+                <dt>Mean Motion (n):</dt>
+                <dd id="meanMotion">&nbsp;</dd>
+
+                <dt>Initial Eccentric Anomaly (E<sub>i</sub>):</dt>
+                <dd id="initialEccentricAnomaly">&nbsp;</dd>
+
+                <dt>Final Eccentric Anomaly (E<sub>f</sub>):</dt>
+                <dd id="finalEccentricAnomaly">&nbsp;</dd>
+
+                <dt>Initial Mean Anomaly (M<sub>i</sub>):</dt>
+                <dd id="initialMeanAnomaly">&nbsp;</dd>
+
+                <dt>Final Mean Anomaly (M<sub>f</sub>):</dt>
+                <dd id="finalMeanAnomaly">&nbsp;</dd>
             </dl>
         `;
+    }
+
+    constructor() {
+        super();
+
+        this.solveForQuantity = 'timeOfFlight';
     }
 
     renderSelectedOrbits(selectedOrbits) {
@@ -58,26 +160,73 @@ class TimeOfFlightCalculator extends Component {
         this.renderSelectedOrbits(selectedOrbits);
 
         if (selectedOrbits.length === 1) {
-            this.setOrbits(selectedOrbits[0].orbit);
+            this.setOrbit(selectedOrbits[0].orbit);
         }
+    }
+
+    handleSelect() {
+        this.dataContainerElement.classList.remove(`solve-for__${this.solveForQuantity}`)
+        this.solveForQuantity = this.solveForQuantityElement.value;
+        this.dataContainerElement.classList.add(`solve-for__${this.solveForQuantity}`)
     }
 
     handleChange(event) {
         const {id, value} = event.target;
-        this[id] = value * Math.PI / 180;
+
+        switch (id) {
+            case 'timeOfFlightInput':
+                this.timeOfFlight = value;
+                break;
+            case 'finalTrueAnomalyInput':
+                this.finalTrueAnomaly = value * Math.PI / 180;
+                break;
+            case 'initialTrueAnomalyInput':
+                this.initialTrueAnomaly = value * Math.PI / 180;
+                break;
+        }
 
         if (this.timeOfFlightCalculator) {
-            this.tof = this.timeOfFlightCalculator.calculateTimeOfFlight(this.initialTrueAnomaly || 0, this.finalTrueAnomaly || 0).tof;
+            switch (this.solveForQuantity) {
+                case 'timeOfFlight':
+                    this.timeOfFlightCalculator.calculateTimeOfFlight(this.initialTrueAnomaly || 0, this.finalTrueAnomaly || 0);
+                    break;
+                case 'finalTrueAnomaly':
+                    this.timeOfFlightCalculator.calculateFinalTrueAnomaly(this.initialTrueAnomaly || 0, this.timeOfFlight || 0);
+                    break;
+                case 'initialTrueAnomaly':
+                    this.timeOfFlightCalculator.calculateInitialTrueAnomaly(this.finalTrueAnomaly || 0, this.timeOfFlight || 0);
+                    break;
+            }
             this.render();
         }
     }
 
-    setOrbits(orbit) {
+    setOrbit(orbit) {
         this.timeOfFlightCalculator = new Module.TimeOfFlightCalculator(orbit);
     }
 
     render() {
-        this.timeOfFlightElement.innerHTML = fixRoundingError(this.tof || 0) + ' s';
+        this.meanMotionElement.innerHTML = fixRoundingError(this.timeOfFlightCalculator.meanMotion || 0) + ' s<sup>-1</sup>';
+        this.initialEccentricAnomalyElement.innerHTML = fixRoundingError(this.timeOfFlightCalculator.initialEccentricAnomaly || 0) + ' rad';
+        this.finalEccentricAnomalyElement.innerHTML = fixRoundingError(this.timeOfFlightCalculator.finalEccentricAnomaly || 0) + ' rad';
+        this.initialMeanAnomalyElement.innerHTML = fixRoundingError(this.timeOfFlightCalculator.initialMeanAnomaly || 0) + ' rad';
+        this.finalMeanAnomalyElement.innerHTML = fixRoundingError(this.timeOfFlightCalculator.finalMeanAnomaly || 0) + ' rad';
+
+        this.timeOfFlightValueElement.innerHTML = '&nbsp;';
+        this.finalTrueAnomalyValueElement.innerHTML = '&nbsp;';
+        this.initialTrueAnomalyValueElement.innerHTML = '&nbsp;';
+
+        switch (this.solveForQuantity) {
+            case 'timeOfFlight':
+                this.timeOfFlightValueElement.innerHTML = fixRoundingError(this.timeOfFlightCalculator.timeOfFlight) + ' s';
+                break;
+            case 'finalTrueAnomaly':
+                this.finalTrueAnomalyValueElement.innerHTML = fixRoundingError(this.timeOfFlightCalculator.finalTrueAnomaly * 180/Math.PI) + ' degrees';
+                break;
+            case 'initialTrueAnomaly':
+                this.initialTrueAnomalyValueElement.innerHTML = fixRoundingError(this.timeOfFlightCalculator.initialTrueAnomaly * 180/Math.PI) + ' degrees';
+                break;
+        }
     }
 }
 
