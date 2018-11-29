@@ -6,9 +6,9 @@
 
 const double PRECISION = 0.00000000001;
 
-const CelestialBody SUN = CelestialBody{1.9891e30, 0, 132712400000};
-const CelestialBody EARTH = CelestialBody{5.9737e24, 1.496e8, 398600};
-const CelestialBody VENUS = CelestialBody{4.867e24, 1.081e8, 325700};
+const CelestialBody SUN = CelestialBody{1.9891e30, 0, 132712400000, 0, 0};
+const CelestialBody EARTH = CelestialBody{5.9737e24, 1.496e8, 398600, 6378, 1.08263E-3};
+const CelestialBody VENUS = CelestialBody{4.867e24, 1.081e8, 325700, 0, 0};
 
 typedef struct {
     double eps; // total mechanical energy

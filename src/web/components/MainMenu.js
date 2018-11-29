@@ -43,6 +43,7 @@ class MainMenu extends Component {
                     <li><a href="#coorbitalrendezvous">Calculate Coorbital Rendezvous</a></li>
                     <li><a href="#pca">Patched Conic Approximation</a></li>
                     <li><a href="#tof">Calculate Time of Flight</a></li>
+                    <li><a href="#j2">Calculate J2 Effects (Earth Only)</a></li>
                 </ul>
             </nav>
         `;

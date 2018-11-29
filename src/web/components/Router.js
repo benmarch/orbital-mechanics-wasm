@@ -8,6 +8,7 @@ import './CoplanarRendezvous.js';
 import './CoorbitalRendezvous.js';
 import './PatchedConicApproximation.js';
 import './TimeOfFlightCalculator.js';
+import './J2EffectCalculator.js'
 
 const routes = {
     'myorbits': 'my-orbits',
@@ -18,6 +19,7 @@ const routes = {
     'coorbitalrendezvous': 'coorbital-rendezvous',
     'pca': 'patched-conic-approximation',
     'tof': 'time-of-flight-calculator',
+    'j2': 'j2-effect-calculator',
     '': 'main-menu',
 }
 
