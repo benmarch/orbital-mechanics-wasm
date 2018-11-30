@@ -44,6 +44,7 @@ class MainMenu extends Component {
                     <li><a href="#pca">Patched Conic Approximation</a></li>
                     <li><a href="#tof">Calculate Time of Flight</a></li>
                     <li><a href="#j2">Calculate J2 Effects (Earth Only)</a></li>
+                    <li><a href="#launchwindow">Launch Window Calculator</a></li>
                 </ul>
             </nav>
         `;
