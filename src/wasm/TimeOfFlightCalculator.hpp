@@ -21,17 +21,22 @@ public:
     double getInitialTrueAnomaly() const;
     double getFinalTrueAnomaly() const;
 
+    void setMeanMotionRateOfChange(double meanMotionRateOfChange);
+
 private:
-    double calculateMeanMotion();
+    double calculateMeanMotion(double semimajorAxis);
+    double calculateMeanMeanMotion(double semimajorAxis, double meanMotionRateOfChange);
     double calculateEccentricAnomalyFromTrueAnomaly(double trueAnomaly);
     double calculateEccentricAnomalyFromMeanAnomaly(double meanAnomaly);
     double calculateMeanAnomalyFromEccentricAnomaly(double eccentricAnomaly);
+    double calculateMeanAnomalyFromMeanMeanMotion(double initialMeanAnomaly, double meanMeanMotion, double timeOfFlight);
     double calculateTrueAnomalyFromEccentricAnomaly(double eccentricAnomaly);
     double solveForTimeOfFlight();
     double solveForInitialMeanAnomaly();
     double solveForFinalMeanAnomaly();
 
     const Orbit& m_orbit;
+    double m_meanMotionRateOfChange;
     double m_meanMotion;
     double m_initialEccentricAnomaly;
     double m_finalEccentricAnomaly;

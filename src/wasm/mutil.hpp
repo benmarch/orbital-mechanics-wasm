@@ -14,4 +14,6 @@ bool withinPrecision(const Vector &a, const Vector &b);
 
 bool withinPrecision(double a, double b, double relEpsilon);
 
+double reduceToWithin(double value, double multiple);
+
 #endif //ORBITAL_MECHANICS_MUTIL_H

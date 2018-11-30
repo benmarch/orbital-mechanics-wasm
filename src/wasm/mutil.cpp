@@ -35,3 +35,16 @@ bool withinPrecision(double a, double b, double relEpsilon)
     // Otherwise fall back to Knuth's algorithm
     return diff <= ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * relEpsilon);
 }
+
+double reduceToWithin(double value, double multiple)
+{
+    if (withinPrecision(value, multiple)) {
+        return 0;
+    }
+
+    if (value < multiple) {
+        return value;
+    }
+
+    return reduceToWithin(value - multiple * floor(value / multiple), multiple);
+}

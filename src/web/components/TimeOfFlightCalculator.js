@@ -126,6 +126,11 @@ class TimeOfFlightCalculator extends Component {
                     <adjustable-input id="timeOfFlightInput" type="range" min="0" value="0" on:input="handleChange"></adjustable-input>
                 </dd>
 
+                <dt>Rate of Mean Motion Change (∆n/∆t):</dt>
+                <dd>
+                    <adjustable-input id="aRateOfChange" type="range" min="0" max="10" step="0.01" value="0" on:input="handleMeanMotionRateOfChange"></adjustable-input>
+                </dd>
+
                 <dt>Mean Motion (n):</dt>
                 <dd id="meanMotion">&nbsp;</dd>
 
@@ -148,6 +153,7 @@ class TimeOfFlightCalculator extends Component {
         super();
 
         this.solveForQuantity = 'timeOfFlight';
+        this.meanMotionRateOfChange = 0;
     }
 
     renderSelectedOrbits(selectedOrbits) {
@@ -184,8 +190,21 @@ class TimeOfFlightCalculator extends Component {
                 this.initialTrueAnomaly = value * Math.PI / 180;
                 break;
         }
+        this.recalculate();
+    }
 
+    handleMeanMotionRateOfChange() {
+        this.meanMotionRateOfChange = Number(this.aRateOfChangeElement.value);
+        this.recalculate();
+    }
+
+    setOrbit(orbit) {
+        this.timeOfFlightCalculator = new Module.TimeOfFlightCalculator(orbit);
+    }
+
+    recalculate() {
         if (this.timeOfFlightCalculator) {
+            this.timeOfFlightCalculator.setMeanMotionRateOfChange(this.meanMotionRateOfChange);
             switch (this.solveForQuantity) {
                 case 'timeOfFlight':
                     this.timeOfFlightCalculator.calculateTimeOfFlight(this.initialTrueAnomaly || 0, this.finalTrueAnomaly || 0);
@@ -199,10 +218,6 @@ class TimeOfFlightCalculator extends Component {
             }
             this.render();
         }
-    }
-
-    setOrbit(orbit) {
-        this.timeOfFlightCalculator = new Module.TimeOfFlightCalculator(orbit);
     }
 
     render() {
