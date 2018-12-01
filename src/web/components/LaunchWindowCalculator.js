@@ -4,11 +4,19 @@ import {fixRoundingError} from '../utils.js';
 
 import './OrbitSelector.js';
 import './TextInput.js';
+import './Button.js';
 
 class LaunchWindowCalculator extends Component {
     static get template() {
         return html`
             <style>
+                :host {
+                    display: grid;
+                    column-gap: var(--gutter-width);
+                    grid-template-columns: 1fr 1fr;
+                    grid-template-areas: "left right";
+                }
+
                 dt, dd {
                     float: left;
                     width: 50%;
@@ -19,108 +27,122 @@ class LaunchWindowCalculator extends Component {
                     clear: both;
                 }
 
-                #dataContainer {
-                    width: 400px;
+                #left {
+                    grid-area: left;
+                }
+
+                #right {
+                    grid-area: right;
                 }
 
                 #errorMessage {
                     color: red;
                 }
 
-                .is-hidden {
+                .is-hidden,
+                .is-next-label {
                     display: none;
+                }
+
+                .is-next .is-next-label {
+                    display: inline;
                 }
             </style>
 
+            <div id="left">
+                <div id="orbitSelect">
+                    <h3>Please select an orbit: </h3>
+                    <div id="errorMessage"></div>
+                    <orbit-selector max-orbits="1" on:orbitselected="handleOrbitSelected"></orbit-selector>
+                    <div id="selectedOrbits"></div>
+                </div>
 
-            <h3>Please select an orbit: </h3>
-            <div id="errorMessage"></div>
-            <orbit-selector max-orbits="1" on:orbitselected="handleOrbitSelected"></orbit-selector>
+                <section id="launchSite">
+                    <h4>Launch Site:</h4>
+                    <dl>
+                        <dt>L<sub>0</sub> (degrees)</dt>
+                        <dd><text-input type="number" id="lsL0"></text-input></dd>
 
-            <div id="selectedOrbits"></div>
+                        <dt>LST (degrees)</dt>
+                        <dd><text-input type="number" id="lsLST"></text-input></dd>
 
-            Launch Site:
-            <dl id="dataContainer">
-                <dt>L<sub>0</sub> (degrees)</dt>
-                <dd><text-input type="number" id="lsL0"></text-input></dd>
+                        <dt>Altitude (km)</dt>
+                        <dd><text-input type="number" id="lsAlt"></text-input></dd>
+                    </dl>
+                    <om-button on:click="handleLaunchSiteSet">Calculate</om-button>
+                </section>
+            </div>
+            <div id="right">
+                <h4 id="dataTitle">Data:</h4>
+                <section id="onlyOpportunity" class="is-hidden">
+                    <header><h3>Only Opportunity</h3></header>
+                    <dl>
+                        <dt>Alpha</dt>
+                        <dd id="oAlpha"></dd>
 
-                <dt>LST (degrees)</dt>
-                <dd><text-input type="number" id="lsLST"></text-input></dd>
+                        <dt>Gamma</dt>
+                        <dd id="oGamma"></dd>
 
-                <dt>Altitude (km)</dt>
-                <dd><text-input type="number" id="lsAlt"></text-input></dd>
-            </dl>
-            <button on:click="handleLaunchSiteSet">Set</button>
+                        <dt>Delta</dt>
+                        <dd id="oDelta"></dd>
 
-            Data:
-            <section id="onlyOpportunity" class="is-hidden">
-                <header><h3>Only Opportunity</h3></header>
-                <dl id="dataContainer">
-                    <dt>Alpha</dt>
-                    <dd id="oAlpha"></dd>
+                        <dt>Beta</dt>
+                        <dd id="oBeta"></dd>
 
-                    <dt>Gamma</dt>
-                    <dd id="oGamma"></dd>
+                        <dt>LWST</dt>
+                        <dd id="oLWST"></dd>
 
-                    <dt>Delta</dt>
-                    <dd id="oDelta"></dd>
+                        <dt>Wait Time (h)</dt>
+                        <dd id="oWaitTime"></dd>
+                    </dl>
+                </section>
 
-                    <dt>Beta</dt>
-                    <dd id="oBeta"></dd>
+                <section id="ascendingNodeOpportunity" class="is-hidden">
+                    <header><h3>Ascending Node Opportunity <span class="is-next-label">(Next)</span></h3></header>
+                    <dl>
+                        <dt>Alpha</dt>
+                        <dd id="anAlpha"></dd>
 
-                    <dt>LSWT</dt>
-                    <dd id="oLWST"></dd>
+                        <dt>Gamma</dt>
+                        <dd id="anGamma"></dd>
 
-                    <dt>Wait Time (h)</dt>
-                    <dd id="oWaitTime"></dd>
-                </dl>
-            </section>
+                        <dt>Delta</dt>
+                        <dd id="anDelta"></dd>
 
-            <section id="ascendingNodeOpportunity" class="is-hidden">
-                <header><h3>Ascending Node Opportunity</h3></header>
-                <dl id="dataContainer">
-                    <dt>Alpha</dt>
-                    <dd id="anAlpha"></dd>
+                        <dt>Beta</dt>
+                        <dd id="anBeta"></dd>
 
-                    <dt>Gamma</dt>
-                    <dd id="anGamma"></dd>
+                        <dt>LWST</dt>
+                        <dd id="anLWST"></dd>
 
-                    <dt>Delta</dt>
-                    <dd id="anDelta"></dd>
+                        <dt>Wait Time (h)</dt>
+                        <dd id="anWaitTime"></dd>
+                    </dl>
+                </section>
 
-                    <dt>Beta</dt>
-                    <dd id="anBeta"></dd>
+                <section id="descendingNodeOpportunity" class="is-hidden">
+                    <header><h3>Descending Node Opportunity <span class="is-next-label">(Next)</span></h3></header>
+                    <dl>
+                        <dt>Alpha</dt>
+                        <dd id="dnAlpha"></dd>
 
-                    <dt>LSWT</dt>
-                    <dd id="anLWST"></dd>
+                        <dt>Gamma</dt>
+                        <dd id="dnGamma"></dd>
 
-                    <dt>Wait Time (h)</dt>
-                    <dd id="anWaitTime"></dd>
-                </dl>
-            </section>
+                        <dt>Delta</dt>
+                        <dd id="dnDelta"></dd>
 
-            <section id="descendingNodeOpportunity" class="is-hidden">
-                <header><h3>Descending Node Opportunity</h3></header>
-                <dl id="dataContainer">
-                    <dt>Alpha</dt>
-                    <dd id="dnAlpha"></dd>
+                        <dt>Beta</dt>
+                        <dd id="dnBeta"></dd>
 
-                    <dt>Gamma</dt>
-                    <dd id="dnGamma"></dd>
+                        <dt>LWST</dt>
+                        <dd id="dnLWST"></dd>
 
-                    <dt>Delta</dt>
-                    <dd id="dnDelta"></dd>
-
-                    <dt>Beta</dt>
-                    <dd id="dnBeta"></dd>
-
-                    <dt>LSWT</dt>
-                    <dd id="dnLWST"></dd>
-
-                    <dt>Wait Time (h)</dt>
-                    <dd id="dnWaitTime"></dd>
-                </dl>
-            </section>
+                        <dt>Wait Time (h)</dt>
+                        <dd id="dnWaitTime"></dd>
+                    </dl>
+                </section>
+            </div>
         `;
     }
 
@@ -173,6 +195,12 @@ class LaunchWindowCalculator extends Component {
         } else {
             this.ascendingNodeOpportunityElement.classList.remove('is-hidden');
             this.descendingNodeOpportunityElement.classList.remove('is-hidden');
+            if (this.launchWindowCalculator.ascendingNodeOpportunity.isNext) {
+                this.ascendingNodeOpportunityElement.classList.add('is-next');
+            }
+            if (this.launchWindowCalculator.descendingNodeOpportunity.isNext) {
+                this.descendingNodeOpportunityElement.classList.add('is-next');
+            }
 
             this.anAlphaElement.innerHTML = fixRoundingError(this.launchWindowCalculator.ascendingNodeOpportunity.alpha * 180 / Math.PI);
             this.anGammaElement.innerHTML = fixRoundingError(this.launchWindowCalculator.ascendingNodeOpportunity.gamma * 180 / Math.PI);

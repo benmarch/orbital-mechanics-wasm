@@ -16,6 +16,7 @@ typedef struct LaunchWindow {
     double delta;
     double lwst;
     double waitTime;
+    bool isNext{false};
 } LaunchWindow;
 
 class LaunchWindowCalculator
