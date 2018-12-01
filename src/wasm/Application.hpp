@@ -4,11 +4,5 @@
 #include <iostream>
 #include "Orbit.hpp"
 
-class Application
-{
-public:
-    Orbit createOrbit(StateVectors stateVectors);
-    Orbit createOrbit(OrbitalElements elements);
-};
 
 #endif //ORBITAL_MECHANICS_APPLICATION_H

@@ -8,32 +8,11 @@
 
 #include "Application.hpp"
 #include <emscripten/bind.h>
-#include <emscripten/emscripten.h>
-
-using namespace emscripten;
-
-Orbit Application::createOrbit(StateVectors stateVectors)
-{
-    Orbit orbit{};
-    orbit.updateFromStateVectors(stateVectors);
-    return orbit;
-}
-
-Orbit Application::createOrbit(OrbitalElements elements)
-{
-    Orbit orbit{};
-    orbit.updateFromOrbitalElements(elements);
-    return orbit;
-}
 
 EMSCRIPTEN_BINDINGS(om_bindings) {
-    class_<Application>("OrbitalMechanics")
-        .constructor()
-        .function("createOrbit", select_overload<Orbit(StateVectors)>(&Application::createOrbit))
-        .function("createOrbit", select_overload<Orbit(OrbitalElements)>(&Application::createOrbit))
-        ;
+    using namespace emscripten;
 
-    emscripten::value_object<OrbitalElements>("OrbitalElements")
+    value_object<OrbitalElements>("OrbitalElements")
             .field("a", &OrbitalElements::a)
             .field("e", &OrbitalElements::e)
             .field("i", &OrbitalElements::i)
@@ -45,8 +24,22 @@ EMSCRIPTEN_BINDINGS(om_bindings) {
             .field("l", &OrbitalElements::l)
             ;
 
-    emscripten::value_object<StateVectors>("StateVectors")
+    value_object<StateVectors>("StateVectors")
             .field("position", &StateVectors::position)
             .field("velocity", &StateVectors::velocity)
             ;
+
+    value_object<LaunchSite>("LaunchSite")
+        .field("lst", &LaunchSite::lst)
+        .field("lat", &LaunchSite::lat)
+        .field("alt", &LaunchSite::alt);
+
+    value_object<LaunchWindow>("LaunchWindow")
+        .field("alpha", &LaunchWindow::alpha)
+        .field("gamma", &LaunchWindow::gamma)
+        .field("delta", &LaunchWindow::delta)
+        .field("lwst", &LaunchWindow::lwst)
+        .field("beta", &LaunchWindow::beta)
+        .field("waitTime", &LaunchWindow::waitTime)
+        .field("isNext", &LaunchWindow::isNext);
 };

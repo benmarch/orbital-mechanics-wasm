@@ -10,7 +10,7 @@ const CelestialBody SUN = CelestialBody{1.9891e30, 0, 132712400000, 0, 0};
 const CelestialBody EARTH = CelestialBody{5.9737e24, 1.496e8, 398600, 6378, 1.08263E-3};
 const CelestialBody VENUS = CelestialBody{4.867e24, 1.081e8, 325700, 0, 0};
 
-typedef struct {
+typedef struct OrbitalElements {
     double eps; // total mechanical energy
     double a; // semi-major axis
     Vector e; // eccentricity
@@ -25,15 +25,31 @@ typedef struct {
     double l; // true longitude
 } OrbitalElements;
 
-typedef struct {
+typedef struct StateVectors {
     Vector position;
     Vector velocity;
 } StateVectors;
 
-typedef struct {
+typedef struct RotationMatrix {
     Vector row1;
     Vector row2;
     Vector row3;
 } RotationMatrix;
+
+typedef struct LaunchSite {
+    double lst;
+    double lat;
+    double alt;
+} LaunchSite;
+
+typedef struct LaunchWindow {
+    double alpha;
+    double beta;
+    double gamma;
+    double delta;
+    double lwst;
+    double waitTime;
+    bool isNext{false};
+} LaunchWindow;
 
 #endif //ORBITAL_MECHANICS_CONSTANTS_H

@@ -3,7 +3,7 @@
 #include "LaunchWindowCalculator.hpp"
 #include "mutil.hpp"
 
-LaunchWindowCalculator::LaunchWindowCalculator(const Orbit &orbit, LaunchSite &launchSite):
+LaunchWindowCalculator::LaunchWindowCalculator(const Orbit &orbit, const LaunchSite &launchSite):
     m_orbit{orbit}, m_launchSite{launchSite}
 {
     calculateNumberOfLaunchOpportunities();
@@ -51,6 +51,23 @@ LaunchWindow LaunchWindowCalculator::getDescendingNodeOpportunity() const
     return m_descendingNodeOpportunity;
 }
 
+LaunchWindow LaunchWindowCalculator::getNextOpportunity() const
+{
+    if (m_onlyOpportunity.isNext) {
+        return m_onlyOpportunity;
+    }
+
+    if (m_ascendingNodeOpportunity.isNext) {
+        return m_ascendingNodeOpportunity;
+    }
+
+    if (m_descendingNodeOpportunity.isNext) {
+        return m_descendingNodeOpportunity;
+    }
+
+    return LaunchWindow{};
+}
+
 void LaunchWindowCalculator::calculateNumberOfLaunchOpportunities()
 {
     if (withinPrecision(m_orbit.getElements().i, m_launchSite.lat)) {
@@ -65,10 +82,14 @@ void LaunchWindowCalculator::calculateNumberOfLaunchOpportunities()
 void LaunchWindowCalculator::calculateOnlyOpportunity() {
     m_onlyOpportunity = LaunchWindow{};
 
+    m_onlyOpportunity.alpha = 0;
+    m_onlyOpportunity.gamma = asin(1 / cos(m_launchSite.lat));
+    m_onlyOpportunity.delta = INFINITY;
     m_onlyOpportunity.lwst = reduceToWithin(m_orbit.getElements().Om + M_PI, 2 * M_PI);
     m_onlyOpportunity.waitTime = (m_onlyOpportunity.lwst >= m_launchSite.lst ?
                                  m_onlyOpportunity.lwst - m_launchSite.lst :
                                  2 * M_PI - m_launchSite.lst + m_onlyOpportunity.lwst) / (15*M_PI/180);
+    m_onlyOpportunity.beta = M_PI / 2;
     m_onlyOpportunity.isNext = true;
 }
 
@@ -110,18 +131,4 @@ EMSCRIPTEN_BINDINGS(launch_window_calculator_bindings) {
         .property("onlyOpportunity", &LaunchWindowCalculator::getOnlyOpportunity)
         .property("ascendingNodeOpportunity", &LaunchWindowCalculator::getAscendingNodeOpportunity)
         .property("descendingNodeOpportunity", &LaunchWindowCalculator::getDescendingNodeOpportunity);
-
-    value_object<LaunchSite>("LaunchSite")
-        .field("lst", &LaunchSite::lst)
-        .field("lat", &LaunchSite::lat)
-        .field("alt", &LaunchSite::alt);
-
-    value_object<LaunchWindow>("LaunchWindow")
-        .field("alpha", &LaunchWindow::alpha)
-        .field("gamma", &LaunchWindow::gamma)
-        .field("delta", &LaunchWindow::delta)
-        .field("lwst", &LaunchWindow::lwst)
-        .field("beta", &LaunchWindow::beta)
-        .field("waitTime", &LaunchWindow::waitTime)
-        .field("isNext", &LaunchWindow::isNext);
 }

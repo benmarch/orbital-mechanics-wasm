@@ -15,12 +15,12 @@ export function fixRoundingError(num) {
 }
 
 // helper to format a vector
-export function printVector(name, vec) {
+export function printVector(vec, dimensions = 'IJK') {
     const x = fixRoundingError(vec[0]);
     const y = fixRoundingError(vec[1]);
     const z = fixRoundingError(vec[2]);
 
-    return `${name}: ${x}I ${y < 0 ? '-' : '+'} ${Math.abs(y)}J ${z < 0 ? '-' : '+'} ${Math.abs(z)}K`;
+    return `${x}${dimensions[0]} ${y < 0 ? '-' : '+'} ${Math.abs(y)}${dimensions[1]} ${z < 0 ? '-' : '+'} ${Math.abs(z)}${dimensions[2]}`;
 }
 
 export function magnitude(vec) {

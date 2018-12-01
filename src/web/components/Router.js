@@ -10,6 +10,7 @@ import './PatchedConicApproximation.js';
 import './TimeOfFlightCalculator.js';
 import './J2EffectCalculator.js'
 import './LaunchWindowCalculator.js'
+import './LaunchRequirementCalculator.js'
 
 const routes = {
     'myorbits': 'my-orbits',
@@ -22,6 +23,7 @@ const routes = {
     'tof': 'time-of-flight-calculator',
     'j2': 'j2-effect-calculator',
     'launchwindow': 'launch-window-calculator',
+    'launchreq': 'launch-requirement-calculator',
     '': 'main-menu',
 }
 

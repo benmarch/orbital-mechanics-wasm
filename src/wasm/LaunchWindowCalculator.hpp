@@ -2,32 +2,18 @@
 #define ORBITAL_MECHANICS_LAUNCHWINDOWCALCULATOR_HPP
 
 #include "Orbit.hpp"
-
-typedef struct LaunchSite {
-    double lst;
-    double lat;
-    double alt;
-} LaunchSite;
-
-typedef struct LaunchWindow {
-    double alpha;
-    double beta;
-    double gamma;
-    double delta;
-    double lwst;
-    double waitTime;
-    bool isNext{false};
-} LaunchWindow;
+#include "constants.hpp"
 
 class LaunchWindowCalculator
 {
 public:
-    LaunchWindowCalculator(const Orbit &orbit, LaunchSite &launchSite);
+    LaunchWindowCalculator(const Orbit &orbit, const LaunchSite &launchSite);
 
     int getNumLaunchOpportunities() const;
     LaunchWindow getOnlyOpportunity() const;
     LaunchWindow getAscendingNodeOpportunity() const;
     LaunchWindow getDescendingNodeOpportunity() const;
+    LaunchWindow getNextOpportunity() const;
 
 private:
     void calculateNumberOfLaunchOpportunities();

@@ -18,7 +18,7 @@ class OrbitalMechanics extends Component {
 }
 
 // upgrade after WASM loads
-if (Module.OrbitalMechanics) {
+if (Module.calledRun) {
     window.customElements.define('orbital-mechanics', OrbitalMechanics);
 } else {
     Module.onRuntimeInitialized = () => {

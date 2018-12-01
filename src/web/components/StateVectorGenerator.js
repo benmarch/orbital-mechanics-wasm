@@ -163,8 +163,8 @@ class StateVectorGenerator extends Component {
 
         this.saveOrbitButtonElement.setOrbit(this.orbit);
 
-        this.radiusElement.innerHTML = printVector('R', stateVectors.position);
-        this.velocityElement.innerHTML = printVector('V', stateVectors.velocity);
+        this.radiusElement.innerHTML = 'R: ' + printVector(stateVectors.position);
+        this.velocityElement.innerHTML = 'V: ' + printVector(stateVectors.velocity);
 
         this.value = stateVectors;
     }
