@@ -11,6 +11,7 @@ import './TimeOfFlightCalculator.js';
 import './J2EffectCalculator.js'
 import './LaunchWindowCalculator.js'
 import './LaunchRequirementCalculator.js'
+import './Reentry.js'
 
 const routes = {
     'myorbits': 'my-orbits',
@@ -24,6 +25,7 @@ const routes = {
     'j2': 'j2-effect-calculator',
     'launchwindow': 'launch-window-calculator',
     'launchreq': 'launch-requirement-calculator',
+    'reentry': 'reentry-calculator',
     '': 'main-menu',
 }
 
