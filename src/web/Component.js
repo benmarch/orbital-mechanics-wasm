@@ -3,6 +3,7 @@ export default class Component extends HTMLElement {
         super();
 
         this.$$name = new.target.name;
+        this.$$listeners = new WeakMap();
 
         // add a shadow root and populate with the template
         this.attachShadow({mode:'open'});
@@ -18,6 +19,7 @@ export default class Component extends HTMLElement {
      */
     parseTree() {
         const recurse = node => {
+            this.removeAllListeners(node);
             this.applyListeners(node);
             this.bindAttributes(node);
             this.saveIDReference(node);
@@ -37,6 +39,19 @@ export default class Component extends HTMLElement {
     }
 
     /**
+     * Removes any listeners added by the `applyListeners` method below
+     *
+     * @param node
+     */
+    removeAllListeners(node) {
+        const listeners = this.$$listeners.get(node);
+
+        if (listeners) {
+            listeners.forEach(([name, handler]) => node.removeEventListener(name, handler));
+        }
+    }
+
+    /**
      * Looks for `on:` attributes and applies handlers
      *
      * @param node
@@ -47,7 +62,11 @@ export default class Component extends HTMLElement {
                 const [_, eventName] = attr.name.split(':');
 
                 if (this[attr.value]) {
-                    node.addEventListener(eventName, this[attr.value].bind(this));
+                    const handler = this[attr.value].bind(this);
+                    const listeners = this.$$listeners.get(node) || [];
+                    listeners.push([eventName, handler])
+                    this.$$listeners.set(node, listeners);
+                    node.addEventListener(eventName, handler);
                 } else {
                     console.error(`No '${eventName}' handler found in component '${this.$$name}': ${attr.value}()`)
                 }

@@ -13,6 +13,7 @@ import './LaunchWindowCalculator.js'
 import './LaunchRequirementCalculator.js'
 import './Reentry.js'
 import './ThrustCalculationTools.js'
+import './RocketStaging.js'
 
 const routes = {
     'myorbits': 'my-orbits',
@@ -28,6 +29,7 @@ const routes = {
     'launchreq': 'launch-requirement-calculator',
     'reentry': 'reentry-calculator',
     'thrust': 'thrust-calculation-tools',
+    'staging': 'rocket-staging',
     '': 'main-menu',
 }
 
