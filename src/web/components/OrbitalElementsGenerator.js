@@ -141,31 +141,31 @@ export default class OrbitalElementsGenerator extends Component {
 
         this.elementsElement.innerHTML = `
             <dl>
-                <dt>Semimajor Axis (a):</dt>
+                <dt>Semimajor Axis (a) (km):</dt>
                 <dd>${elements.a}</dd>
 
                 <dt>Eccentricity (e):</dt>
                 <dd>${elements.e}</dd>
 
-                <dt>Inclination (i):</dt>
+                <dt>Inclination (i) (degrees):</dt>
                 <dd>${elements.i}</dd>
 
-                <dt>Right Ascension (Ω):</dt>
+                <dt>Right Ascension (Ω) (degrees):</dt>
                 <dd>${elements.Om}</dd>
 
-                <dt>Argument of Perigee (ω):</dt>
+                <dt>Argument of Perigee (ω) (degrees):</dt>
                 <dd>${elements.o}</dd>
 
-                <dt>True Anomaly (ν):</dt>
+                <dt>True Anomaly (ν) (degrees):</dt>
                 <dd>${elements.nu}</dd>
 
-                <dt>Argument of Latitude (u):</dt>
+                <dt>Argument of Latitude (u) (degrees):</dt>
                 <dd>${elements.u}</dd>
 
-                <dt>Longitude of Perigee (∏):</dt>
+                <dt>Longitude of Perigee (∏) (degrees):</dt>
                 <dd>${elements.Pi}</dd>
 
-                <dt>True Longitude (l):</dt>
+                <dt>True Longitude (l) (degrees):</dt>
                 <dd>${elements.l}</dd>
             </dl>
         `;

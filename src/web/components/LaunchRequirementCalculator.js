@@ -120,9 +120,9 @@ class LaunchRequirementCalculator extends Component {
     }
 
     render() {
-        this.vLSElement.innerHTML = printVector(this.launchRequirementCalculator.vLS, 'SEZ');
-        this.vLGElement.innerHTML = printVector(this.launchRequirementCalculator.vLG, 'SEZ');
-        this.vBOElement.innerHTML = printVector(this.launchRequirementCalculator.vBO, 'SEZ');
+        this.vLSElement.innerHTML = printVector(this.launchRequirementCalculator.vLS, 'SEZ') + ' km/s';
+        this.vLGElement.innerHTML = printVector(this.launchRequirementCalculator.vLG, 'SEZ') + ' km/s';
+        this.vBOElement.innerHTML = printVector(this.launchRequirementCalculator.vBO, 'SEZ') + ' km/s';
         this.deltaVNeededElement.innerHTML = fixRoundingError(this.launchRequirementCalculator.deltaVNeeded || 0) + ' km/s';
         this.deltaVDesignElement.innerHTML = fixRoundingError(this.launchRequirementCalculator.deltaVDesign || 0) + ' km/s';
     }

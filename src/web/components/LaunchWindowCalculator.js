@@ -77,22 +77,22 @@ class LaunchWindowCalculator extends Component {
                 <section id="onlyOpportunity" class="is-hidden">
                     <header><h3>Only Opportunity</h3></header>
                     <dl>
-                        <dt>Alpha</dt>
+                        <dt>Inclination Auxiliary Angle (α) (degrees)</dt>
                         <dd id="oAlpha"></dd>
 
-                        <dt>Gamma</dt>
+                        <dt>Launch Direction Auxiliary Angle (γ) (degrees)</dt>
                         <dd id="oGamma"></dd>
 
-                        <dt>Delta</dt>
+                        <dt>Launch Window Location Angle (δ) (degrees)</dt>
                         <dd id="oDelta"></dd>
 
-                        <dt>Beta</dt>
+                        <dt>Launch Azimuth Angle (β) (degrees)</dt>
                         <dd id="oBeta"></dd>
 
-                        <dt>LWST</dt>
+                        <dt>Launch Window Sidereal Time (LWST) (degrees)</dt>
                         <dd id="oLWST"></dd>
 
-                        <dt>Wait Time (h)</dt>
+                        <dt>Wait Time (hours)</dt>
                         <dd id="oWaitTime"></dd>
                     </dl>
                 </section>
@@ -100,19 +100,19 @@ class LaunchWindowCalculator extends Component {
                 <section id="ascendingNodeOpportunity" class="is-hidden">
                     <header><h3>Ascending Node Opportunity <span class="is-next-label">(Next)</span></h3></header>
                     <dl>
-                        <dt>Alpha</dt>
+                        <dt>Inclination Auxiliary Angle (α) (degrees)</dt>
                         <dd id="anAlpha"></dd>
 
-                        <dt>Gamma</dt>
+                        <dt>Launch Direction Auxiliary Angle (γ) (degrees)</dt>
                         <dd id="anGamma"></dd>
 
-                        <dt>Delta</dt>
+                        <dt>Launch Window Location Angle (δ) (degrees)</dt>
                         <dd id="anDelta"></dd>
 
-                        <dt>Beta</dt>
+                        <dt>Launch Azimuth Angle (β) (degrees)</dt>
                         <dd id="anBeta"></dd>
 
-                        <dt>LWST</dt>
+                        <dt>Launch Window Sidereal Time (LWST) (degrees)</dt>
                         <dd id="anLWST"></dd>
 
                         <dt>Wait Time (h)</dt>
@@ -123,19 +123,19 @@ class LaunchWindowCalculator extends Component {
                 <section id="descendingNodeOpportunity" class="is-hidden">
                     <header><h3>Descending Node Opportunity <span class="is-next-label">(Next)</span></h3></header>
                     <dl>
-                        <dt>Alpha</dt>
+                        <dt>Inclination Auxiliary Angle (α) (degrees)</dt>
                         <dd id="dnAlpha"></dd>
 
-                        <dt>Gamma</dt>
+                        <dt>Launch Direction Auxiliary Angle (γ) (degrees)</dt>
                         <dd id="dnGamma"></dd>
 
-                        <dt>Delta</dt>
+                        <dt>Launch Window Location Angle (δ) (degrees)</dt>
                         <dd id="dnDelta"></dd>
 
-                        <dt>Beta</dt>
+                        <dt>Launch Azimuth Angle (β) (degrees)</dt>
                         <dd id="dnBeta"></dd>
 
-                        <dt>LWST</dt>
+                        <dt>Launch Window Sidereal Time (LWST) (degrees)</dt>
                         <dd id="dnLWST"></dd>
 
                         <dt>Wait Time (h)</dt>
