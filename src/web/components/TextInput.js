@@ -26,7 +26,7 @@ class TextInput extends Component {
                 }
             </style>
 
-            <input id="input" on:input="handleChange" on:change="handleChange" @:type @:value @:min @:max />
+            <input id="input" on:input="handleChange" on:change="handleChange" @:type @:value @:min @:max @:placeholder />
         `;
     }
 

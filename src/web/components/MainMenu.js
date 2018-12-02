@@ -47,6 +47,7 @@ class MainMenu extends Component {
                     <li><a href="#launchwindow">Calculate Launch Window</a></li>
                     <li><a href="#launchreq">Calculate Launch Requirements</a></li>
                     <li><a href="#reentry">Calculate Reentry Conditions</a></li>
+                    <li><a href="#thrust">Thrust Calculation Tools</a></li>
                 </ul>
             </nav>
         `;

@@ -10,8 +10,9 @@ const CelestialBody SUN = CelestialBody{1.9891e30, 0, 132712400000, 0, 0};
 const CelestialBody EARTH = CelestialBody{5.9737e24, 1.496e8, 398600, 6378, 1.08263E-3};
 const CelestialBody VENUS = CelestialBody{4.867e24, 1.081e8, 325700, 0, 0};
 
-const double ATMOSPHERIC_DENSITY_AT_SL = 1.225;    // kg/m^3
+const double ATMOSPHERIC_DENSITY_AT_SL = 1.225; // kg/m^3
 const double ATMOSPHERIC_SCALE_HEIGHT = 0.000139; // m^-1
+const double GRAVITY_AT_SL = 9.81; // m/s^2
 
 typedef struct OrbitalElements {
     double eps; // total mechanical energy

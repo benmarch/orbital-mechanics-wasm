@@ -12,6 +12,7 @@ import './J2EffectCalculator.js'
 import './LaunchWindowCalculator.js'
 import './LaunchRequirementCalculator.js'
 import './Reentry.js'
+import './ThrustCalculationTools.js'
 
 const routes = {
     'myorbits': 'my-orbits',
@@ -26,6 +27,7 @@ const routes = {
     'launchwindow': 'launch-window-calculator',
     'launchreq': 'launch-requirement-calculator',
     'reentry': 'reentry-calculator',
+    'thrust': 'thrust-calculation-tools',
     '': 'main-menu',
 }
 
