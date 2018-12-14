@@ -44,6 +44,7 @@ export default class CreateOrbit extends Component {
                         <option value="132712400000">Sun</option>
                         <option value="398600" selected>Earth</option>
                         <option value="325700">Venus</option>
+                        <option value="37967000">Saturn</option>
                     </select>
 
                     <om-button part="button" id="transferStateVectorsButton" on:click="transferStateVectors">
